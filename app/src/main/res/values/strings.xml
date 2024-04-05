@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">KinopoiskDev</string>
+    <string name="main_screen_popular">Popular</string>
 </resources>

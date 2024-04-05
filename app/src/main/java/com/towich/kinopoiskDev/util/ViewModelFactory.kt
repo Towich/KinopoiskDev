@@ -3,7 +3,7 @@ package com.towich.kinopoiskDev.util
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.towich.kinopoiskDev.ui.screen.main.MainViewModel
-import com.towich.kinopoiskDev.ui.screen.product.MovieViewModel
+import com.towich.kinopoiskDev.ui.screen.movie.MovieViewModel
 
 class ViewModelFactory(
 

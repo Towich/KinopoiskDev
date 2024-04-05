@@ -25,6 +25,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -37,14 +39,18 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.towich.kinopoiskDev.R
+import com.towich.kinopoiskDev.data.model.MovieModel
+import com.towich.kinopoiskDev.data.model.RatingModel
 import com.towich.kinopoiskDev.ui.screen.main.components.CustomHorizontalPager
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun MainScreen(
     navController: NavController,
-    viewModel: MainViewModel? = null
+    viewModel: MainViewModel
 ) {
+    val pagerMovies by viewModel.pagerMovies.collectAsState()
+
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -78,7 +84,6 @@ fun MainScreen(
             )
         },
     ) { scaffoldPadding ->
-        val pagerState = rememberPagerState(pageCount = { 10 })
 
         Column(
             modifier = Modifier
@@ -94,9 +99,19 @@ fun MainScreen(
                     .padding(horizontal = 32.dp)
             )
 
-            CustomHorizontalPager(pagerState = pagerState)
+            CustomHorizontalPager(pagerMovies = pagerMovies.ifEmpty {
+                listOf(
+                    MovieModel(
+                        id = 4,
+                        name = "1+1",
+                        description = "bruh",
+                        ratingKp = 9.87f,
+                        posterPreviewUrl = null
+                    )
+                )
+            })
 
-            repeat(50){
+            repeat(50) {
                 Text(
                     text = "1+1",
                     style = MaterialTheme.typography.titleLarge,

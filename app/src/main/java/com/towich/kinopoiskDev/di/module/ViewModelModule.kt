@@ -1,6 +1,7 @@
 package com.towich.kinopoiskDev.di.module
 
-import com.towich.kinopoiskDev.di.scope.AppScope
+import com.towich.kinopoiskDev.di.scope.ActivityScope
+import com.towich.kinopoiskDev.domain.GetMoviesUseCase
 import com.towich.kinopoiskDev.util.ViewModelFactory
 import dagger.Module
 import dagger.Provides
@@ -9,8 +10,10 @@ import dagger.Provides
 object ViewModelModule {
 
     @Provides
-    @AppScope
+    @ActivityScope
     fun provideViewModelFactory(
-
-    ): ViewModelFactory = ViewModelFactory()
+        getMovies: GetMoviesUseCase
+    ): ViewModelFactory = ViewModelFactory(
+        getMovies = getMovies
+    )
 }

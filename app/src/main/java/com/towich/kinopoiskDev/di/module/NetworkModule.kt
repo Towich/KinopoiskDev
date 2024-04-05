@@ -13,6 +13,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.IOException
 import java.net.SocketTimeoutException
+import java.util.concurrent.TimeUnit
 
 
 @Module
@@ -27,6 +28,7 @@ object NetworkModule {
     @AppScope
     fun provideOkHttpClient(logger: HttpLoggingInterceptor): OkHttpClient {
         return OkHttpClient.Builder()
+
             .addInterceptor(logger)
             .addInterceptor { chain ->
                 try {
@@ -37,6 +39,9 @@ object NetworkModule {
                     throw IOException("Превышено время ожидания ответа от сервера", e)
                 }
             }
+            .connectTimeout(15, TimeUnit.SECONDS)
+            .readTimeout(15, TimeUnit.SECONDS)
+            .writeTimeout(15, TimeUnit.SECONDS)
             .build()
     }
 

@@ -6,4 +6,5 @@ data class MovieModel(
     val description: String,
     val ratingKp: Float?,
     val posterPreviewUrl: String?,
+    val genres: List<String>
 )

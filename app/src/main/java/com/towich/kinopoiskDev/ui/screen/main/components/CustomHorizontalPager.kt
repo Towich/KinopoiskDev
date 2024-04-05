@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
@@ -27,12 +28,13 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
 import com.towich.kinopoiskDev.data.model.MovieModel
+import java.util.Locale
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CustomHorizontalPager(
     pagerMovies: List<MovieModel>
-){
+) {
     val pagerState = rememberPagerState(pageCount = { pagerMovies.size })
 
     HorizontalPager(
@@ -46,6 +48,7 @@ fun CustomHorizontalPager(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
+                .height(600.dp)
         ) {
             SubcomposeAsyncImage(
                 model = currMovie.posterPreviewUrl,
@@ -53,6 +56,7 @@ fun CustomHorizontalPager(
                 contentScale = ContentScale.FillWidth,
                 modifier = Modifier
                     .fillMaxWidth()
+//                    .heightIn(max = 350.dp)
                     .shadow(
                         elevation = 15.dp,
                         shape = RoundedCornerShape(10)
@@ -89,10 +93,18 @@ fun CustomHorizontalPager(
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.padding(top = 20.dp)
             )
+
+            val genres = StringBuilder(currMovie.genres[0])
+            for (i in 1 until currMovie.genres.size) {
+                genres.append(", ${currMovie.genres[i]}")
+            }
+
             Text(
-                text = "Crime, Drama, Thriller",
+                text = genres.toString(),
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurface
+                color = MaterialTheme.colorScheme.onSurface,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
         }
     }

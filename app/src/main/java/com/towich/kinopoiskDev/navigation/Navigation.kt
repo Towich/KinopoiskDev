@@ -7,6 +7,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.towich.kinopoiskDev.ui.screen.allmovies.AllMoviesScreen
+import com.towich.kinopoiskDev.ui.screen.allmovies.AllMoviesViewModel
 import com.towich.kinopoiskDev.ui.screen.main.MainScreen
 import com.towich.kinopoiskDev.ui.screen.main.MainViewModel
 import com.towich.kinopoiskDev.ui.screen.movie.MovieScreen
@@ -27,13 +28,27 @@ fun Navigation(
             val mainViewModel: MainViewModel =
                 ViewModelProvider(it, viewModelFactory)[MainViewModel::class.java]
 
-            MainScreen(navController = navController, viewModel = mainViewModel)
+            MainScreen(
+                viewModel = mainViewModel,
+                onClickAllMovies = {
+                    navController.navigate(Screen.AllMoviesScreen.route)
+                }
+            )
         }
         composable(route = Screen.MovieScreen.route) {
             MovieScreen(navController = navController)
         }
         composable(route = Screen.AllMoviesScreen.route) {
-            AllMoviesScreen()
+
+            val allMoviesViewModel: AllMoviesViewModel =
+                ViewModelProvider(it, viewModelFactory)[AllMoviesViewModel::class.java]
+
+            AllMoviesScreen(
+                viewModel = allMoviesViewModel,
+                onNavIconClicked = {
+                    navController.popBackStack()
+                }
+            )
         }
     }
 }

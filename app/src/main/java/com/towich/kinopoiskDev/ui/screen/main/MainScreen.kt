@@ -39,6 +39,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.towich.kinopoiskDev.R
+import com.towich.kinopoiskDev.data.model.GenreModel
 import com.towich.kinopoiskDev.data.model.MovieModel
 import com.towich.kinopoiskDev.data.model.RatingModel
 import com.towich.kinopoiskDev.ui.screen.main.components.CustomHorizontalPager
@@ -46,8 +47,8 @@ import com.towich.kinopoiskDev.ui.screen.main.components.CustomHorizontalPager
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun MainScreen(
-    navController: NavController,
-    viewModel: MainViewModel
+    viewModel: MainViewModel,
+    onClickAllMovies: () -> Unit
 ) {
     val pagerMovies by viewModel.pagerMovies.collectAsState()
 
@@ -56,12 +57,12 @@ fun MainScreen(
             CenterAlignedTopAppBar(
                 title = {
                     Text(
-                        text = stringResource(id = R.string.app_name),
+                        text = stringResource(id = R.string.main_screen_title),
                         fontWeight = FontWeight.Bold
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = { /*TODO*/ }) {
+                    IconButton(onClick = { onClickAllMovies() }) {
                         Icon(
                             painterResource(id = R.drawable.menu_all_films),
                             contentDescription = "All films",
@@ -106,20 +107,11 @@ fun MainScreen(
                         name = "1+1",
                         description = "bruh",
                         ratingKp = 9.87f,
-                        posterPreviewUrl = null
+                        posterPreviewUrl = null,
+                        genres = listOf("боевик")
                     )
                 )
             })
-
-            repeat(50) {
-                Text(
-                    text = "1+1",
-                    style = MaterialTheme.typography.titleLarge,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(top = 20.dp)
-                )
-            }
         }
     }
 }

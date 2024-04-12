@@ -3,7 +3,7 @@ package com.towich.kinopoiskDev.data.util
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.towich.kinopoiskDev.data.model.MovieModel
-import com.towich.kinopoiskDev.network.ApiService
+import com.towich.kinopoiskDev.data.network.ApiService
 
 class MoviesPagingSource(
     private val apiService: ApiService,

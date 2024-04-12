@@ -44,7 +44,7 @@ import com.towich.kinopoiskDev.data.model.MovieModel
 import com.towich.kinopoiskDev.data.model.RatingModel
 import com.towich.kinopoiskDev.ui.screen.main.components.CustomHorizontalPager
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
     viewModel: MainViewModel,

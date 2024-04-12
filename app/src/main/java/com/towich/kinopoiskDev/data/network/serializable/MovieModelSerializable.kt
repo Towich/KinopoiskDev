@@ -1,4 +1,4 @@
-package com.towich.kinopoiskDev.network.serializable
+package com.towich.kinopoiskDev.data.network.serializable
 
 import com.towich.kinopoiskDev.data.model.GenreModel
 import com.towich.kinopoiskDev.data.model.MovieModel

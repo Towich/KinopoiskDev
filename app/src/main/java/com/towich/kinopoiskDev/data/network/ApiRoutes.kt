@@ -1,4 +1,4 @@
-package com.towich.kinopoiskDev.network
+package com.towich.kinopoiskDev.data.network
 
 object ApiRoutes {
     const val BASE_URL = "https://api.kinopoisk.dev"

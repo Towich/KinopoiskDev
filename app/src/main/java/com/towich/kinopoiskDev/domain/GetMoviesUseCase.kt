@@ -1,8 +1,8 @@
 package com.towich.kinopoiskDev.domain
 
 import com.towich.kinopoiskDev.data.repository.MainRepository
-import com.towich.kinopoiskDev.network.serializable.MovieModelResponseSerializable
-import com.towich.kinopoiskDev.util.ApiResult
+import com.towich.kinopoiskDev.data.network.serializable.MovieModelResponseSerializable
+import com.towich.kinopoiskDev.data.network.ApiResult
 
 class GetMoviesUseCase(
     private val repository: MainRepository

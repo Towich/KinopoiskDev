@@ -3,8 +3,8 @@ package com.towich.kinopoiskDev.di.module
 import android.util.Log
 import com.towich.kinopoiskDev.data.source.Constants
 import com.towich.kinopoiskDev.di.scope.AppScope
-import com.towich.kinopoiskDev.network.ApiRoutes
-import com.towich.kinopoiskDev.network.ApiService
+import com.towich.kinopoiskDev.data.network.ApiRoutes
+import com.towich.kinopoiskDev.data.network.ApiService
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient

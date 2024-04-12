@@ -1,7 +1,7 @@
-package com.towich.kinopoiskDev.network
+package com.towich.kinopoiskDev.data.network
 
 import com.towich.kinopoiskDev.data.source.Constants
-import com.towich.kinopoiskDev.network.serializable.MovieModelResponseSerializable
+import com.towich.kinopoiskDev.data.network.serializable.MovieModelResponseSerializable
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Header

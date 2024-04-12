@@ -7,11 +7,10 @@ import com.towich.kinopoiskDev.data.model.MovieModel
 import com.towich.kinopoiskDev.data.source.Constants
 import com.towich.kinopoiskDev.data.source.SessionStorage
 import com.towich.kinopoiskDev.data.util.MoviesPagingSource
-import com.towich.kinopoiskDev.network.ApiService
-import com.towich.kinopoiskDev.network.serializable.MovieModelResponseSerializable
-import com.towich.kinopoiskDev.util.ApiResult
+import com.towich.kinopoiskDev.data.network.ApiService
+import com.towich.kinopoiskDev.data.network.serializable.MovieModelResponseSerializable
+import com.towich.kinopoiskDev.data.network.ApiResult
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.runBlocking
 
 class MainRepositoryImpl(
     private val apiService: ApiService,

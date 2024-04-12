@@ -1,8 +1,11 @@
 package com.towich.kinopoiskDev.di.module
 
 import com.towich.kinopoiskDev.di.scope.ActivityScope
+import com.towich.kinopoiskDev.domain.GetCountriesUseCase
+import com.towich.kinopoiskDev.domain.GetGenresUseCase
 import com.towich.kinopoiskDev.domain.GetMoviesPageUseCase
 import com.towich.kinopoiskDev.domain.GetMoviesUseCase
+import com.towich.kinopoiskDev.domain.SetFiltersUseCase
 import com.towich.kinopoiskDev.util.ViewModelFactory
 import dagger.Module
 import dagger.Provides
@@ -14,9 +17,15 @@ object ViewModelModule {
     @ActivityScope
     fun provideViewModelFactory(
         getMovies: GetMoviesUseCase,
-        getMoviesPage: GetMoviesPageUseCase
+        getMoviesPage: GetMoviesPageUseCase,
+        getGenresUse: GetGenresUseCase,
+        getCountries: GetCountriesUseCase,
+        setFilters: SetFiltersUseCase
     ): ViewModelFactory = ViewModelFactory(
         getMovies = getMovies,
-        getMoviesPage = getMoviesPage
+        getMoviesPage = getMoviesPage,
+        getGenres = getGenresUse,
+        getCountries = getCountries,
+        setFilters = setFilters
     )
 }

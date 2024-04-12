@@ -8,6 +8,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.towich.kinopoiskDev.ui.screen.allmovies.AllMoviesScreen
 import com.towich.kinopoiskDev.ui.screen.allmovies.AllMoviesViewModel
+import com.towich.kinopoiskDev.ui.screen.filters.FiltersScreen
+import com.towich.kinopoiskDev.ui.screen.filters.FiltersViewModel
 import com.towich.kinopoiskDev.ui.screen.main.MainScreen
 import com.towich.kinopoiskDev.ui.screen.main.MainViewModel
 import com.towich.kinopoiskDev.ui.screen.movie.MovieScreen
@@ -45,6 +47,22 @@ fun Navigation(
 
             AllMoviesScreen(
                 viewModel = allMoviesViewModel,
+                onFilterIconClicked = {
+                    navController.navigate(Screen.FiltersScreen.route)
+                },
+                onNavIconClicked = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
+        composable(route = Screen.FiltersScreen.route) {
+
+            val filtersViewModel: FiltersViewModel =
+                ViewModelProvider(it, viewModelFactory)[FiltersViewModel::class.java]
+
+            FiltersScreen(
+                viewModel = filtersViewModel,
                 onNavIconClicked = {
                     navController.popBackStack()
                 }

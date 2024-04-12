@@ -13,4 +13,5 @@ interface MainRepository {
 
     suspend fun getGenres(): ApiResult<List<FieldModel>>
     suspend fun getCountries(): ApiResult<List<FieldModel>>
+    fun setFilters(listOfFilters: List<String?>)
 }

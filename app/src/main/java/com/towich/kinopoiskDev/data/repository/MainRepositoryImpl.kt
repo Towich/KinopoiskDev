@@ -11,10 +11,7 @@ import com.towich.kinopoiskDev.data.util.MoviesPagingSource
 import com.towich.kinopoiskDev.data.network.ApiService
 import com.towich.kinopoiskDev.data.network.serializable.MovieModelResponseRemote
 import com.towich.kinopoiskDev.data.network.ApiResult
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.withContext
 
 class MainRepositoryImpl(
     private val apiService: ApiService,
@@ -35,7 +32,7 @@ class MainRepositoryImpl(
             pageSize = Constants.pageLimit,
         ),
         pagingSourceFactory = {
-            MoviesPagingSource(apiService)
+            MoviesPagingSource(apiService, sessionStorage)
         }
     ).flow
 
@@ -43,7 +40,7 @@ class MainRepositoryImpl(
         return if(sessionStorage.listOfGenres != null)
             ApiResult.Success(sessionStorage.listOfGenres!!)
         else{
-            val response = apiService.getAllPossibleValuesByField(field = Constants.allGenresField)
+            val response = apiService.getAllPossibleValuesByField(field = Constants.genresField)
             if(response.isSuccessful){
                 sessionStorage.listOfGenres = response.body()
                 ApiResult.Success(response.body() ?: listOf())
@@ -57,7 +54,7 @@ class MainRepositoryImpl(
         return if(sessionStorage.listOfCountries != null)
             ApiResult.Success(sessionStorage.listOfCountries!!)
         else{
-            val response = apiService.getAllPossibleValuesByField(field = Constants.allCountriesField)
+            val response = apiService.getAllPossibleValuesByField(field = Constants.countriesField)
             if(response.isSuccessful){
                 sessionStorage.listOfCountries = response.body()
                 ApiResult.Success(response.body() ?: listOf())
@@ -65,5 +62,9 @@ class MainRepositoryImpl(
                 ApiResult.Error(response.message())
             }
         }
+    }
+
+    override fun setFilters(listOfFilters: List<String?>) {
+        sessionStorage.listOfFilters = listOfFilters
     }
 }

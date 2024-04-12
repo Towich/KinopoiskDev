@@ -4,9 +4,11 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.towich.kinopoiskDev.data.model.MovieModel
 import com.towich.kinopoiskDev.data.network.ApiService
+import com.towich.kinopoiskDev.data.source.SessionStorage
 
 class MoviesPagingSource(
     private val apiService: ApiService,
+    private val sessionStorage: SessionStorage
 ): PagingSource<Int, MovieModel>() {
     override fun getRefreshKey(state: PagingState<Int, MovieModel>): Int? {
         return state.anchorPosition?.let { anchorPosition ->
@@ -18,7 +20,11 @@ class MoviesPagingSource(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, MovieModel> {
         return try {
             val page = params.key ?: 1
-            val response = apiService.getMovies(page = page)
+            val response = apiService.getMovies(
+                page = page,
+                genre = sessionStorage.listOfFilters[0],
+                country = sessionStorage.listOfFilters[1]
+            )
 
             LoadResult.Page(
                 data = response.body()!!.docs.map { it.convertToMovieModel() },

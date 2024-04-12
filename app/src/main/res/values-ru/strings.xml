@@ -6,4 +6,6 @@
     <string name="main_screen_title">Кинопоиск</string>
     <string name="filters_screen_top_bar_title">Фильтры</string>
     <string name="filters_screen_genre">Жанр</string>
+    <string name="filters_screen_country">Страна</string>
+    <string name="filters_screen_apply_button">Применить</string>
 </resources>

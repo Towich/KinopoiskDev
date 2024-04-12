@@ -1,5 +1,6 @@
 package com.towich.kinopoiskDev.ui.screen.allmovies
 
+import android.util.Log
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -30,6 +31,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -43,6 +45,7 @@ import com.towich.kinopoiskDev.R
 @Composable
 fun AllMoviesScreen(
     viewModel: AllMoviesViewModel,
+    onFilterIconClicked: () -> Unit,
     onNavIconClicked: () -> Unit
 ) {
     val movies = viewModel.performGetMovies().collectAsLazyPagingItems()
@@ -65,15 +68,15 @@ fun AllMoviesScreen(
                         )
                     }
                 },
-//                actions = {
-//                    IconButton(onClick = { /*TODO*/ }) {
-//                        Icon(
-//                            imageVector = Icons.Default.Search,
-//                            contentDescription = "Search",
-//                            modifier = Modifier.size(28.dp)
-//                        )
-//                    }
-//                },
+                actions = {
+                    IconButton(onClick = { onFilterIconClicked() }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.filter_icon),
+                            contentDescription = "Filters",
+                            modifier = Modifier.size(28.dp)
+                        )
+                    }
+                },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                     containerColor = MaterialTheme.colorScheme.background
                 )
@@ -137,6 +140,7 @@ fun AllMoviesScreen(
             }
 
             when (movies.loadState.refresh) { //FIRST LOAD
+
                 is LoadState.Error -> {
                     //TODO Error Item
                     //state.error to get error message
@@ -187,7 +191,8 @@ fun AllMoviesScreen(
                     }
                 }
 
-                else -> {}
+                else -> {
+                }
             }
         }
 

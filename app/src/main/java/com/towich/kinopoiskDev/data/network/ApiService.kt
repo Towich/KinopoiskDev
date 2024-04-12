@@ -13,7 +13,9 @@ interface ApiService {
     suspend fun getMovies(
         @Query("page") page: Int,
         @Query("limit") limit: Int = Constants.pageLimit,
-        @Query("selectFields") selectFields: List<String> = Constants.selectedFields
+        @Query("selectFields") selectFields: List<String> = Constants.selectedFields,
+        @Query("genres.name") genre: String? = null,
+        @Query("countries.name") country: String? = null,
     ): Response<MovieModelResponseRemote>
 
     @GET(ApiRoutes.POSSIBLE_VALUES_BY_FIELD)

@@ -8,7 +8,6 @@ import com.towich.kinopoiskDev.data.network.serializable.MovieModelRemote
 import com.towich.kinopoiskDev.data.network.serializable.MovieModelResponseRemote
 import com.towich.kinopoiskDev.data.source.Constants
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.ResponseBody
 import okhttp3.ResponseBody.Companion.toResponseBody
 import retrofit2.Response
 
@@ -16,7 +15,9 @@ class MockApiService : ApiService {
     override suspend fun getMovies(
         page: Int,
         limit: Int,
-        selectFields: List<String>
+        selectFields: List<String>,
+        genre: String?,
+        country: String?
     ): Response<MovieModelResponseRemote> {
         return Response.success(
             MovieModelResponseRemote(
@@ -42,7 +43,7 @@ class MockApiService : ApiService {
 
     override suspend fun getAllPossibleValuesByField(field: String): Response<List<FieldModel>> {
         return when(field){
-            Constants.allGenresField -> {
+            Constants.genresField -> {
                 Response.success(
                     listOf(
                         FieldModel(name = "комедия", slug = "comedy"),
@@ -51,7 +52,7 @@ class MockApiService : ApiService {
                     )
                 )
             }
-            Constants.allCountriesField -> {
+            Constants.countriesField -> {
                 Response.success(
                     listOf(
                         FieldModel(name = "Австралия", slug = "Avstraliya"),

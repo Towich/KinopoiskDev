@@ -2,7 +2,6 @@ package com.towich.kinopoiskDev.util
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.towich.kinopoiskDev.data.repository.MainRepository
 import com.towich.kinopoiskDev.domain.GetMoviesPageUseCase
 import com.towich.kinopoiskDev.domain.GetMoviesUseCase
 import com.towich.kinopoiskDev.ui.screen.allmovies.AllMoviesViewModel

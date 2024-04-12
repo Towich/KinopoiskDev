@@ -3,4 +3,6 @@
     <string name="main_screen_popular">Popular</string>
     <string name="all_movies_screen_title">All movies</string>
     <string name="main_screen_title">Kinopoisk</string>
+    <string name="filters_screen_top_bar_title">Filters</string>
+    <string name="filters_screen_genre">Genre</string>
 </resources>

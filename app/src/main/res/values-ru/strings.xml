@@ -4,4 +4,6 @@
     <string name="main_screen_popular">Популярно</string>
     <string name="all_movies_screen_title">Все фильмы</string>
     <string name="main_screen_title">Кинопоиск</string>
+    <string name="filters_screen_top_bar_title">Фильтры</string>
+    <string name="filters_screen_genre">Жанр</string>
 </resources>

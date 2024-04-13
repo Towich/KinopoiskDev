@@ -4,11 +4,16 @@ import com.towich.kinopoiskDev.di.scope.ActivityScope
 import com.towich.kinopoiskDev.domain.GetActorsPageUseCase
 import com.towich.kinopoiskDev.domain.GetCountriesUseCase
 import com.towich.kinopoiskDev.domain.GetCurrentMovieUseCase
+import com.towich.kinopoiskDev.domain.GetCurrentSeasonUseCase
+import com.towich.kinopoiskDev.domain.GetEpisodesPageUseCase
 import com.towich.kinopoiskDev.domain.GetFiltersUseCase
 import com.towich.kinopoiskDev.domain.GetGenresUseCase
 import com.towich.kinopoiskDev.domain.GetMoviesPageUseCase
 import com.towich.kinopoiskDev.domain.GetMoviesUseCase
+import com.towich.kinopoiskDev.domain.GetReviewsPageUseCase
+import com.towich.kinopoiskDev.domain.GetSeasonsPageUseCase
 import com.towich.kinopoiskDev.domain.SetCurrentMovieUseCase
+import com.towich.kinopoiskDev.domain.SetCurrentSeasonUseCase
 import com.towich.kinopoiskDev.domain.SetFiltersUseCase
 import com.towich.kinopoiskDev.util.ViewModelFactory
 import dagger.Module
@@ -29,6 +34,11 @@ object ViewModelModule {
         getCurrentMovie: GetCurrentMovieUseCase,
         setCurrentMovie: SetCurrentMovieUseCase,
         getActorsPage: GetActorsPageUseCase,
+        getSeasonsPage: GetSeasonsPageUseCase,
+        setCurrentSeason: SetCurrentSeasonUseCase,
+        getCurrentSeason: GetCurrentSeasonUseCase,
+        getEpisodesPage: GetEpisodesPageUseCase,
+        getReviewsPage: GetReviewsPageUseCase,
     ): ViewModelFactory = ViewModelFactory(
         getMovies = getMovies,
         getMoviesPage = getMoviesPage,
@@ -38,6 +48,11 @@ object ViewModelModule {
         getFilters = getFilters,
         getCurrentMovie = getCurrentMovie,
         setCurrentMovie = setCurrentMovie,
-        getActorsPage = getActorsPage
+        getActorsPage = getActorsPage,
+        getSeasonsPage = getSeasonsPage,
+        setCurrentSeason = setCurrentSeason,
+        getCurrentSeason = getCurrentSeason,
+        getEpisodesPage = getEpisodesPage,
+        getReviewsPage = getReviewsPage
     )
 }

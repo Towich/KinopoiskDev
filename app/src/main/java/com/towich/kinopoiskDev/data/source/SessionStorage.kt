@@ -10,4 +10,5 @@ class SessionStorage {
     var listOfFilters: List<String?> = List(size = 4) { null }
 
     var currentMovie: MovieModel? = null
+    var currentSeason: Int? = null
 }

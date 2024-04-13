@@ -4,8 +4,11 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.towich.kinopoiskDev.data.model.ActorModel
+import com.towich.kinopoiskDev.data.model.EpisodeModel
 import com.towich.kinopoiskDev.data.model.FieldModel
 import com.towich.kinopoiskDev.data.model.MovieModel
+import com.towich.kinopoiskDev.data.model.ReviewModel
+import com.towich.kinopoiskDev.data.model.SeasonModel
 import com.towich.kinopoiskDev.data.source.Constants
 import com.towich.kinopoiskDev.data.source.SessionStorage
 import com.towich.kinopoiskDev.data.util.MoviesPagingSource
@@ -13,6 +16,9 @@ import com.towich.kinopoiskDev.data.network.ApiService
 import com.towich.kinopoiskDev.data.network.serializable.MovieModelResponseRemote
 import com.towich.kinopoiskDev.data.network.ApiResult
 import com.towich.kinopoiskDev.data.util.ActorsPagingSource
+import com.towich.kinopoiskDev.data.util.EpisodesPagingSource
+import com.towich.kinopoiskDev.data.util.ReviewsPagingSource
+import com.towich.kinopoiskDev.data.util.SeasonsPagingSource
 import kotlinx.coroutines.flow.Flow
 
 class MainRepositoryImpl(
@@ -88,6 +94,41 @@ class MainRepositoryImpl(
         ),
         pagingSourceFactory = {
             ActorsPagingSource(apiService, sessionStorage)
+        }
+    ).flow
+
+    override fun getSeasonsPage(): Flow<PagingData<SeasonModel>> = Pager(
+        config = PagingConfig(
+            pageSize = Constants.pageLimit,
+        ),
+        pagingSourceFactory = {
+            SeasonsPagingSource(apiService, sessionStorage)
+        }
+    ).flow
+
+    override fun setCurrentSeason(seasonNumber: Int?) {
+        sessionStorage.currentSeason = seasonNumber
+    }
+
+    override fun getCurrentSeason(): Int? {
+        return sessionStorage.currentSeason
+    }
+
+    override fun getEpisodesPage(): Flow<PagingData<EpisodeModel>> = Pager(
+        config = PagingConfig(
+            pageSize = Constants.pageLimit,
+        ),
+        pagingSourceFactory = {
+            EpisodesPagingSource(apiService, sessionStorage)
+        }
+    ).flow
+
+    override fun getReviewPage(): Flow<PagingData<ReviewModel>>  = Pager(
+        config = PagingConfig(
+            pageSize = Constants.pageLimit,
+        ),
+        pagingSourceFactory = {
+            ReviewsPagingSource(apiService, sessionStorage)
         }
     ).flow
 }

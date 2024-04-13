@@ -8,12 +8,16 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.towich.kinopoiskDev.ui.screen.allmovies.AllMoviesScreen
 import com.towich.kinopoiskDev.ui.screen.allmovies.AllMoviesViewModel
+import com.towich.kinopoiskDev.ui.screen.episodes.EpisodesScreen
+import com.towich.kinopoiskDev.ui.screen.episodes.EpisodesViewModel
 import com.towich.kinopoiskDev.ui.screen.filters.FiltersScreen
 import com.towich.kinopoiskDev.ui.screen.filters.FiltersViewModel
 import com.towich.kinopoiskDev.ui.screen.main.MainScreen
 import com.towich.kinopoiskDev.ui.screen.main.MainViewModel
 import com.towich.kinopoiskDev.ui.screen.movie.MovieScreen
 import com.towich.kinopoiskDev.ui.screen.movie.MovieViewModel
+import com.towich.kinopoiskDev.ui.screen.reviews.ReviewsScreen
+import com.towich.kinopoiskDev.ui.screen.reviews.ReviewsViewModel
 import com.towich.kinopoiskDev.util.ViewModelFactory
 
 @Composable
@@ -34,7 +38,7 @@ fun Navigation(
             MainScreen(
                 viewModel = mainViewModel,
                 onNavClickSingleMovie = {
-                  navController.navigate(Screen.MovieScreen.route)
+                    navController.navigate(Screen.MovieScreen.route)
                 },
                 onNavClickAllMovies = {
                     navController.navigate(Screen.AllMoviesScreen.route)
@@ -48,8 +52,14 @@ fun Navigation(
 
             MovieScreen(
                 viewModel = movieViewModel,
+                onSeasonClicked = {
+                    navController.navigate(Screen.EpisodesScreen.route)
+                },
                 onNavIconClicked = {
                     navController.popBackStack()
+                },
+                onReviewsButtonNavClicked = {
+                    navController.navigate(Screen.ReviewsScreen.route)
                 }
             )
         }
@@ -80,6 +90,31 @@ fun Navigation(
             FiltersScreen(
                 appContext = appContext,
                 viewModel = filtersViewModel,
+                onNavIconClicked = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
+        composable(route = Screen.EpisodesScreen.route) {
+
+            val episodesViewModel: EpisodesViewModel =
+                ViewModelProvider(it, viewModelFactory)[EpisodesViewModel::class.java]
+
+            EpisodesScreen(
+                viewModel = episodesViewModel,
+                onNavIconClicked = {
+                    navController.popBackStack()
+                }
+            )
+        }
+        composable(route = Screen.ReviewsScreen.route) {
+
+            val reviewsViewModel: ReviewsViewModel =
+                ViewModelProvider(it, viewModelFactory)[ReviewsViewModel::class.java]
+
+            ReviewsScreen(
+                viewModel = reviewsViewModel,
                 onNavIconClicked = {
                     navController.popBackStack()
                 }

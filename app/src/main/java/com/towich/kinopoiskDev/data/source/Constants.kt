@@ -7,7 +7,10 @@ import com.towich.kinopoiskDev.data.model.PosterModel
 import com.towich.kinopoiskDev.data.model.RatingModel
 import com.towich.kinopoiskDev.data.model.VotesModel
 import com.towich.kinopoiskDev.data.network.serializable.ActorModelRemote
+import com.towich.kinopoiskDev.data.network.serializable.EpisodeModelRemote
 import com.towich.kinopoiskDev.data.network.serializable.MovieModelRemote
+import com.towich.kinopoiskDev.data.network.serializable.ReviewModelRemote
+import com.towich.kinopoiskDev.data.network.serializable.SeasonModelRemote
 
 object Constants {
     const val API_KEY: String = BuildConfig.API_KEY_KINOPOISK_DEV
@@ -34,6 +37,26 @@ object Constants {
         "name",
         "photo"
     )
+
+    val seasonSelectedFields = listOf(
+        "name",
+        "number",
+        "poster",
+        "episodesCount"
+    )
+
+    val episodesSelectedFields = listOf(
+        "episodes"
+    )
+
+    val reviewsSelectedFields = listOf(
+        "id",
+        "title",
+        "review",
+        "author",
+        "type"
+    )
+
 
     val movieRemoteTest = MovieModelRemote(
         id = 3242,
@@ -83,6 +106,36 @@ object Constants {
             id = 445,
             name = "Варвара Коробкова",
             photo = null
-        ),
+        )
+    )
+
+    val seasonTest = listOf(
+        SeasonModelRemote(
+            id = "5353",
+            name = "Спецматериалы",
+            number = 1,
+            poster = null,
+            episodesCount = 3
+        )
+    )
+
+    val episodesTest = listOf(
+        EpisodeModelRemote(
+            name = "Эпизод 1",
+            number = 1,
+            still = null,
+            duration = 62,
+            description = "Классная серия"
+        )
+    )
+
+    val reviewsTest = listOf(
+        ReviewModelRemote(
+            id = 45325,
+            title = "Review1",
+            type = "Позитивный",
+            review = "отзыв большой и позитивный...",
+            author = "я"
+        )
     )
 }

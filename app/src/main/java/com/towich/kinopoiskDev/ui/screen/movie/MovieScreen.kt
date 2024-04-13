@@ -2,7 +2,6 @@ package com.towich.kinopoiskDev.ui.screen.movie
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -24,6 +23,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -44,13 +44,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.SubcomposeAsyncImage
 import com.towich.kinopoiskDev.R
 import com.towich.kinopoiskDev.data.model.MovieModel
 import com.towich.kinopoiskDev.data.source.Constants
-import com.towich.kinopoiskDev.ui.theme.Orange
 import com.towich.kinopoiskDev.ui.theme.Yellow
 import java.util.Locale
 
@@ -59,10 +60,13 @@ import java.util.Locale
 @Composable
 fun MovieScreen(
     viewModel: MovieViewModel,
-    onNavIconClicked: () -> Unit
+    onSeasonClicked: () -> Unit,
+    onNavIconClicked: () -> Unit,
+    onReviewsButtonNavClicked: () -> Unit
 ) {
     val movie: MovieModel = viewModel.performGetCurrentMovie() ?: Constants.movieTest
     val actors = viewModel.performGetActors().collectAsLazyPagingItems()
+    val seasons = viewModel.performGetSeasons().collectAsLazyPagingItems()
 
     Scaffold(
         topBar = {
@@ -217,10 +221,12 @@ fun MovieScreen(
                 )
             }
 
+            // Actors pagination
             Column(
                 modifier = Modifier
                     .padding(top = 40.dp)
                     .fillMaxWidth()
+                    .height(250.dp)
             ) {
                 Text(
                     text = stringResource(id = R.string.actors),
@@ -230,6 +236,7 @@ fun MovieScreen(
                     modifier = Modifier.padding(start = 20.dp, end = 20.dp)
                 )
 
+
                 LazyRow(
                     horizontalArrangement = Arrangement.spacedBy(20.dp),
                     modifier = Modifier
@@ -237,7 +244,120 @@ fun MovieScreen(
                         .fillMaxWidth()
                 ) {
                     item {
-                        Spacer(modifier = Modifier.width(0.dp))
+                        when (actors.loadState.refresh) { // FIRST LOAD
+
+                            is LoadState.Error -> {
+                                Column(
+
+                                ) {
+                                    Box(modifier = Modifier
+                                        .width(100.dp)
+                                        .height(150.dp)
+                                        .shadow(
+                                            elevation = 5.dp,
+                                            shape = RoundedCornerShape(15.dp)
+                                        )
+                                        .clip(shape = RoundedCornerShape(15.dp))
+                                        .background(
+                                            color = MaterialTheme.colorScheme.surface,
+                                            shape = CircleShape
+                                        ),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+
+                                    }
+                                    Text(
+                                        text = (actors.loadState.refresh as LoadState.Error).error.message
+                                            ?: stringResource(id = R.string.error),
+                                        style = MaterialTheme.typography.titleLarge,
+                                        color = MaterialTheme.colorScheme.primary,
+                                        textAlign = TextAlign.Center
+                                    )
+                                }
+                            }
+
+                            is LoadState.Loading -> { // Loading UI
+                                Column(
+                                    modifier = Modifier.padding(start = 20.dp)
+                                ) {
+                                    Box(modifier = Modifier
+                                        .width(100.dp)
+                                        .height(150.dp)
+                                        .background(
+                                            color = MaterialTheme.colorScheme.surface,
+                                            shape = RoundedCornerShape(15.dp)
+                                        ),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
+                                    }
+                                    Text(
+                                        text = stringResource(id = R.string.loading),
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        color = MaterialTheme.colorScheme.primary,
+                                        textAlign = TextAlign.Center,
+                                        modifier = Modifier.width(100.dp)
+                                    )
+                                }
+                            }
+
+                            else -> {}
+                        }
+
+                        when (actors.loadState.append) { // Pagination
+
+                            is LoadState.Error -> {
+                                Column(
+
+                                ) {
+                                    Box(modifier = Modifier
+                                        .width(100.dp)
+                                        .height(150.dp)
+                                        .background(
+                                            color = MaterialTheme.colorScheme.surface,
+                                            shape = RoundedCornerShape(15.dp)
+                                        ),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+
+                                    }
+                                    Text(
+                                        text = (actors.loadState.refresh as LoadState.Error).error.message
+                                            ?: stringResource(id = R.string.error),
+                                        style = MaterialTheme.typography.titleLarge,
+                                        color = MaterialTheme.colorScheme.primary,
+                                        textAlign = TextAlign.Center
+                                    )
+                                }
+                            }
+
+                            is LoadState.Loading -> { // Loading UI
+                                Column(
+                                    modifier = Modifier.padding(start = 20.dp)
+                                ) {
+                                    Box(modifier = Modifier
+                                        .width(100.dp)
+                                        .height(150.dp)
+                                        .background(
+                                            color = MaterialTheme.colorScheme.surface,
+                                            shape = RoundedCornerShape(15.dp)
+                                        ),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
+                                    }
+                                    Text(
+                                        text = stringResource(id = R.string.loading),
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        color = MaterialTheme.colorScheme.primary,
+                                        textAlign = TextAlign.Center,
+                                        modifier = Modifier.width(100.dp)
+                                    )
+                                }
+                            }
+
+                            else -> {}
+                        }
                     }
                     items(actors.itemCount) { index ->
                         Column(
@@ -277,12 +397,13 @@ fun MovieScreen(
                                     }
                                 },
                                 modifier = Modifier
-                                    .size(96.dp)
+                                    .width(100.dp)
+                                    .height(150.dp)
                                     .shadow(
                                         elevation = 5.dp,
-                                        shape = CircleShape
+                                        shape = RoundedCornerShape(15.dp)
                                     )
-                                    .clip(shape = CircleShape)
+                                    .clip(shape = RoundedCornerShape(15.dp))
                             )
 
                             Text(
@@ -291,9 +412,11 @@ fun MovieScreen(
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onSurface,
                                 textAlign = TextAlign.Center,
+                                maxLines = 2,
+                                overflow = TextOverflow.Ellipsis,
                                 modifier = Modifier
                                     .padding(top = 10.dp)
-                                    .width(96.dp)
+                                    .width(100.dp)
                             )
                         }
 
@@ -304,6 +427,228 @@ fun MovieScreen(
                 }
             }
 
+            // Seasons pagination
+            if(movie.isSeries == true){
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(250.dp)
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.seasons),
+                        color = MaterialTheme.colorScheme.primary,
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(start = 20.dp, end = 20.dp)
+                    )
+
+
+                    LazyRow(
+                        horizontalArrangement = Arrangement.spacedBy(20.dp),
+                        modifier = Modifier
+                            .padding(top = 20.dp)
+                            .fillMaxWidth()
+                    ) {
+                        item {
+                            when (seasons.loadState.refresh) { // FIRST LOAD
+
+                                is LoadState.Error -> {
+                                    Column(
+
+                                    ) {
+                                        Box(modifier = Modifier
+                                            .width(100.dp)
+                                            .height(150.dp)
+                                            .background(
+                                                color = MaterialTheme.colorScheme.surface,
+                                                shape = RoundedCornerShape(15.dp)
+                                            ),
+                                            contentAlignment = Alignment.Center
+                                        ) {
+
+                                        }
+                                        Text(
+                                            text = (seasons.loadState.refresh as LoadState.Error).error.message
+                                                ?: stringResource(id = R.string.error),
+                                            style = MaterialTheme.typography.titleLarge,
+                                            color = MaterialTheme.colorScheme.primary,
+                                            textAlign = TextAlign.Center
+                                        )
+                                    }
+                                }
+
+                                is LoadState.Loading -> { // Loading UI
+                                    Column(
+                                        modifier = Modifier.padding(start = 20.dp)
+                                    ) {
+                                        Box(modifier = Modifier
+                                            .width(100.dp)
+                                            .height(150.dp)
+                                            .background(
+                                                color = MaterialTheme.colorScheme.surface,
+                                                shape = RoundedCornerShape(15.dp)
+                                            ),
+                                            contentAlignment = Alignment.Center
+                                        ) {
+                                            CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
+                                        }
+                                        Text(
+                                            text = stringResource(id = R.string.loading),
+                                            style = MaterialTheme.typography.bodyMedium,
+                                            color = MaterialTheme.colorScheme.primary,
+                                            textAlign = TextAlign.Center,
+                                            modifier = Modifier.width(100.dp)
+                                        )
+                                    }
+                                }
+
+                                else -> {}
+                            }
+
+                            when (seasons.loadState.append) { // Pagination
+
+                                is LoadState.Error -> {
+                                    Column(
+
+                                    ) {
+                                        Box(modifier = Modifier
+                                            .width(100.dp)
+                                            .height(150.dp)
+                                            .background(
+                                                color = MaterialTheme.colorScheme.surface,
+                                                shape = RoundedCornerShape(15.dp)
+                                            ),
+                                            contentAlignment = Alignment.Center
+                                        ) {
+
+                                        }
+                                        Text(
+                                            text = (seasons.loadState.refresh as LoadState.Error).error.message
+                                                ?: stringResource(id = R.string.error),
+                                            style = MaterialTheme.typography.titleLarge,
+                                            color = MaterialTheme.colorScheme.primary,
+                                            textAlign = TextAlign.Center
+                                        )
+                                    }
+                                }
+
+                                is LoadState.Loading -> { // Loading UI
+                                    Column(
+                                        modifier = Modifier.padding(start = 20.dp)
+                                    ) {
+                                        Box(modifier = Modifier
+                                            .width(100.dp)
+                                            .height(150.dp)
+                                            .background(
+                                                color = MaterialTheme.colorScheme.surface,
+                                                shape = RoundedCornerShape(15.dp)
+                                            ),
+                                            contentAlignment = Alignment.Center
+                                        ) {
+                                            CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
+                                        }
+                                        Text(
+                                            text = stringResource(id = R.string.loading),
+                                            style = MaterialTheme.typography.bodyMedium,
+                                            color = MaterialTheme.colorScheme.primary,
+                                            textAlign = TextAlign.Center,
+                                            modifier = Modifier.width(100.dp)
+                                        )
+                                    }
+                                }
+
+                                else -> {}
+                            }
+                        }
+                        items(seasons.itemCount) { index ->
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                modifier = Modifier
+                            ) {
+                                SubcomposeAsyncImage(
+                                    model = seasons[index]?.previewPoster,
+                                    contentDescription = "Poster of season",
+                                    contentScale = ContentScale.Crop,
+                                    loading = {
+                                        Box(
+                                            contentAlignment = Alignment.Center,
+                                            modifier = Modifier
+                                                .fillMaxSize()
+                                                .background(color = MaterialTheme.colorScheme.surface)
+                                        ) {
+                                            CircularProgressIndicator(
+                                                strokeWidth = 5.dp,
+                                                modifier = Modifier
+                                                    .size(50.dp),
+                                            )
+                                        }
+                                    },
+                                    error = {
+                                        Box(
+                                            contentAlignment = Alignment.Center,
+                                            modifier = Modifier
+                                                .fillMaxSize()
+                                                .background(color = MaterialTheme.colorScheme.surface)
+                                        ) {
+                                            Icon(
+                                                painter = painterResource(id = R.drawable.episodes_icon),
+                                                contentDescription = "No poster",
+                                                tint = MaterialTheme.colorScheme.primary
+                                            )
+                                        }
+                                    },
+                                    modifier = Modifier
+                                        .width(100.dp)
+                                        .height(150.dp)
+                                        .shadow(
+                                            elevation = 5.dp,
+                                            shape = RoundedCornerShape(15.dp)
+                                        )
+                                        .clip(shape = RoundedCornerShape(15.dp))
+                                        .clickable {
+                                            viewModel.performSetCurrentSeason(seasons[index]?.number)
+                                            onSeasonClicked()
+                                        }
+                                )
+
+                                Text(
+                                    text = seasons[index]?.name ?: stringResource(id = R.string.no_info_short),
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = MaterialTheme.colorScheme.onSurface,
+                                    textAlign = TextAlign.Center,
+                                    maxLines = 2,
+                                    overflow = TextOverflow.Ellipsis,
+                                    modifier = Modifier
+                                        .padding(top = 10.dp)
+                                        .width(100.dp)
+                                )
+                            }
+
+                        }
+                        item {
+                            Spacer(modifier = Modifier.width(0.dp))
+                        }
+                    }
+                }
+            }
+
+            // Reviews button
+            Button(
+                onClick = { onReviewsButtonNavClicked() },
+                shape = RoundedCornerShape(30.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(100.dp)
+                    .padding(horizontal = 20.dp, vertical = 20.dp)
+            ) {
+                Text(
+                    text = stringResource(id = R.string.Reviews),
+                    color = MaterialTheme.colorScheme.background,
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+//            Spacer(modifier = Modifier.height(500.dp))
         }
     }
 }

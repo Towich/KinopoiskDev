@@ -5,11 +5,16 @@ import com.towich.kinopoiskDev.di.scope.AppScope
 import com.towich.kinopoiskDev.domain.GetActorsPageUseCase
 import com.towich.kinopoiskDev.domain.GetCountriesUseCase
 import com.towich.kinopoiskDev.domain.GetCurrentMovieUseCase
+import com.towich.kinopoiskDev.domain.GetCurrentSeasonUseCase
+import com.towich.kinopoiskDev.domain.GetEpisodesPageUseCase
 import com.towich.kinopoiskDev.domain.GetFiltersUseCase
 import com.towich.kinopoiskDev.domain.GetGenresUseCase
 import com.towich.kinopoiskDev.domain.GetMoviesPageUseCase
 import com.towich.kinopoiskDev.domain.GetMoviesUseCase
+import com.towich.kinopoiskDev.domain.GetReviewsPageUseCase
+import com.towich.kinopoiskDev.domain.GetSeasonsPageUseCase
 import com.towich.kinopoiskDev.domain.SetCurrentMovieUseCase
+import com.towich.kinopoiskDev.domain.SetCurrentSeasonUseCase
 import com.towich.kinopoiskDev.domain.SetFiltersUseCase
 import dagger.Module
 import dagger.Provides
@@ -61,5 +66,30 @@ object DomainModule {
     @AppScope
     fun provideGetActorsPageUseCase(repository: MainRepository): GetActorsPageUseCase {
         return GetActorsPageUseCase(repository = repository)
+    }
+    @Provides
+    @AppScope
+    fun provideGetSeasonsPageUseCase(repository: MainRepository): GetSeasonsPageUseCase {
+        return GetSeasonsPageUseCase(repository = repository)
+    }
+    @Provides
+    @AppScope
+    fun provideGetCurrentSeasonUseCase(repository: MainRepository): GetCurrentSeasonUseCase {
+        return GetCurrentSeasonUseCase(repository = repository)
+    }
+    @Provides
+    @AppScope
+    fun provideSetCurrentSeasonUseCase(repository: MainRepository): SetCurrentSeasonUseCase {
+        return SetCurrentSeasonUseCase(repository = repository)
+    }
+    @Provides
+    @AppScope
+    fun provideGetEpisodesPageUseCase(repository: MainRepository): GetEpisodesPageUseCase {
+        return GetEpisodesPageUseCase(repository = repository)
+    }
+    @Provides
+    @AppScope
+    fun provideGetReviewsPageUseCase(repository: MainRepository): GetReviewsPageUseCase {
+        return GetReviewsPageUseCase(repository = repository)
     }
 }

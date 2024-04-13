@@ -24,4 +24,10 @@
     <string name="description">Описание</string>
     <string name="reviews">отзывов</string>
     <string name="actors">Актеры</string>
+    <string name="seasons">Сезоны</string>
+    <string name="season">Сезон</string>
+    <string name="episode">Эпизод</string>
+    <string name="minutes">мин.</string>
+    <string name="Reviews">Отзывы</string>
+    <string name="author">Автор</string>
 </resources>

@@ -23,4 +23,10 @@
     <string name="description">Description</string>
     <string name="reviews">reviews</string>
     <string name="actors">Actors</string>
+    <string name="seasons">Seasons</string>
+    <string name="season">Season</string>
+    <string name="episode">Episode</string>
+    <string name="minutes">mins.</string>
+    <string name="Reviews">Reviews</string>
+    <string name="author">Author</string>
 </resources>

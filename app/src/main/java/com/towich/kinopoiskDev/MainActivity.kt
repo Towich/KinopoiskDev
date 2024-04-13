@@ -2,14 +2,11 @@ package com.towich.kinopoiskDev
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
-import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.core.graphics.alpha
 import androidx.navigation.compose.rememberNavController
 import com.towich.kinopoiskDev.di.component.ActivityComponent
 import com.towich.kinopoiskDev.navigation.Navigation
-import com.towich.kinopoiskDev.ui.theme.VkTestTheme
+import com.towich.kinopoiskDev.ui.theme.KinopoiskDevTheme
 import com.towich.kinopoiskDev.util.ViewModelFactory
 import javax.inject.Inject
 
@@ -30,7 +27,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             val navController = rememberNavController()
 
-            VkTestTheme {
+            KinopoiskDevTheme {
                 Navigation(
                     navController = navController,
                     appContext = applicationContext,

@@ -3,6 +3,7 @@ package com.towich.kinopoiskDev.ui.screen.main.components
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -36,7 +37,8 @@ import java.util.Locale
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CustomHorizontalPager(
-    pagerMovies: List<MovieModel>
+    pagerMovies: List<MovieModel>,
+    onMovieClicked: (movieModel: MovieModel) -> Unit
 ) {
     val pagerState = rememberPagerState(pageCount = { pagerMovies.size })
 
@@ -64,7 +66,10 @@ fun CustomHorizontalPager(
                         elevation = 15.dp,
                         shape = RoundedCornerShape(10)
                     )
-                    .clip(shape = RoundedCornerShape(10)),
+                    .clip(shape = RoundedCornerShape(10))
+                    .clickable {
+                        onMovieClicked(currMovie)
+                    },
                 loading = {
                     Box(
                         contentAlignment = Alignment.Center,

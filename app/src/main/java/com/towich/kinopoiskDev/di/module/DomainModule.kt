@@ -2,11 +2,14 @@ package com.towich.kinopoiskDev.di.module
 
 import com.towich.kinopoiskDev.data.repository.MainRepository
 import com.towich.kinopoiskDev.di.scope.AppScope
+import com.towich.kinopoiskDev.domain.GetActorsPageUseCase
 import com.towich.kinopoiskDev.domain.GetCountriesUseCase
+import com.towich.kinopoiskDev.domain.GetCurrentMovieUseCase
 import com.towich.kinopoiskDev.domain.GetFiltersUseCase
 import com.towich.kinopoiskDev.domain.GetGenresUseCase
 import com.towich.kinopoiskDev.domain.GetMoviesPageUseCase
 import com.towich.kinopoiskDev.domain.GetMoviesUseCase
+import com.towich.kinopoiskDev.domain.SetCurrentMovieUseCase
 import com.towich.kinopoiskDev.domain.SetFiltersUseCase
 import dagger.Module
 import dagger.Provides
@@ -43,5 +46,20 @@ object DomainModule {
     @AppScope
     fun provideGetFiltersUseCase(repository: MainRepository): GetFiltersUseCase {
         return GetFiltersUseCase(repository = repository)
+    }
+    @Provides
+    @AppScope
+    fun provideGetCurrentMovieUseCase(repository: MainRepository): GetCurrentMovieUseCase {
+        return GetCurrentMovieUseCase(repository = repository)
+    }
+    @Provides
+    @AppScope
+    fun provideSetCurrentMovieUseCase(repository: MainRepository): SetCurrentMovieUseCase {
+        return SetCurrentMovieUseCase(repository = repository)
+    }
+    @Provides
+    @AppScope
+    fun provideGetActorsPageUseCase(repository: MainRepository): GetActorsPageUseCase {
+        return GetActorsPageUseCase(repository = repository)
     }
 }

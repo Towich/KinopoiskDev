@@ -2,7 +2,10 @@ package com.towich.kinopoiskDev
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
+import androidx.core.graphics.alpha
 import androidx.navigation.compose.rememberNavController
 import com.towich.kinopoiskDev.di.component.ActivityComponent
 import com.towich.kinopoiskDev.navigation.Navigation

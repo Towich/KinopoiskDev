@@ -13,8 +13,15 @@
     <string name="filters_screen_year">Год</string>
     <string name="no_photo">Нет фото!</string>
     <string name="no_info_name">Нет информации о названии!</string>
+    <string name="no_info_description">Нет информации об описании!</string>
     <string name="year_error">Год должен быть от 1874 до 2050!</string>
     <string name="cleared">Очищено</string>
     <string name="filters_screen_age_rating">Возрастной рейтинг</string>
     <string name="error">Ошибка</string>
+    <string name="no_info_short">Неизвестно!</string>
+    <string name="movie">Фильм</string>
+    <string name="series">Сериал</string>
+    <string name="description">Описание</string>
+    <string name="reviews">отзывов</string>
+    <string name="actors">Актеры</string>
 </resources>

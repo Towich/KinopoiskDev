@@ -13,6 +13,7 @@ import com.towich.kinopoiskDev.ui.screen.filters.FiltersViewModel
 import com.towich.kinopoiskDev.ui.screen.main.MainScreen
 import com.towich.kinopoiskDev.ui.screen.main.MainViewModel
 import com.towich.kinopoiskDev.ui.screen.movie.MovieScreen
+import com.towich.kinopoiskDev.ui.screen.movie.MovieViewModel
 import com.towich.kinopoiskDev.util.ViewModelFactory
 
 @Composable
@@ -32,13 +33,25 @@ fun Navigation(
 
             MainScreen(
                 viewModel = mainViewModel,
-                onClickAllMovies = {
+                onNavClickSingleMovie = {
+                  navController.navigate(Screen.MovieScreen.route)
+                },
+                onNavClickAllMovies = {
                     navController.navigate(Screen.AllMoviesScreen.route)
                 }
             )
         }
         composable(route = Screen.MovieScreen.route) {
-            MovieScreen(navController = navController)
+
+            val movieViewModel: MovieViewModel =
+                ViewModelProvider(it, viewModelFactory)[MovieViewModel::class.java]
+
+            MovieScreen(
+                viewModel = movieViewModel,
+                onNavIconClicked = {
+                    navController.popBackStack()
+                }
+            )
         }
         composable(route = Screen.AllMoviesScreen.route) {
 
@@ -47,6 +60,9 @@ fun Navigation(
 
             AllMoviesScreen(
                 viewModel = allMoviesViewModel,
+                onMovieClicked = {
+                    navController.navigate(Screen.MovieScreen.route)
+                },
                 onFilterIconClicked = {
                     navController.navigate(Screen.FiltersScreen.route)
                 },

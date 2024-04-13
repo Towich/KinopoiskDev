@@ -1,6 +1,7 @@
 package com.towich.kinopoiskDev.data.repository
 
 import androidx.paging.PagingData
+import com.towich.kinopoiskDev.data.model.ActorModel
 import com.towich.kinopoiskDev.data.model.FieldModel
 import com.towich.kinopoiskDev.data.model.MovieModel
 import com.towich.kinopoiskDev.data.network.serializable.MovieModelResponseRemote
@@ -16,4 +17,9 @@ interface MainRepository {
 
     fun setFilters(listOfFilters: List<String?>)
     fun getFilters(): List<String?>
+
+    fun setCurrentMovie(movie: MovieModel?)
+    fun getCurrentMovie(): MovieModel?
+
+    fun getActorsPage(): Flow<PagingData<ActorModel>>
 }

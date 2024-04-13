@@ -3,6 +3,7 @@ package com.towich.kinopoiskDev.data.repository
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import com.towich.kinopoiskDev.data.model.ActorModel
 import com.towich.kinopoiskDev.data.model.FieldModel
 import com.towich.kinopoiskDev.data.model.MovieModel
 import com.towich.kinopoiskDev.data.source.Constants
@@ -11,6 +12,7 @@ import com.towich.kinopoiskDev.data.util.MoviesPagingSource
 import com.towich.kinopoiskDev.data.network.ApiService
 import com.towich.kinopoiskDev.data.network.serializable.MovieModelResponseRemote
 import com.towich.kinopoiskDev.data.network.ApiResult
+import com.towich.kinopoiskDev.data.util.ActorsPagingSource
 import kotlinx.coroutines.flow.Flow
 
 class MainRepositoryImpl(
@@ -71,4 +73,21 @@ class MainRepositoryImpl(
     override fun getFilters(): List<String?> {
         return sessionStorage.listOfFilters
     }
+
+    override fun setCurrentMovie(movie: MovieModel?) {
+        sessionStorage.currentMovie = movie
+    }
+
+    override fun getCurrentMovie(): MovieModel? {
+        return sessionStorage.currentMovie
+    }
+
+    override fun getActorsPage(): Flow<PagingData<ActorModel>> = Pager(
+        config = PagingConfig(
+            pageSize = Constants.pageLimit,
+        ),
+        pagingSourceFactory = {
+            ActorsPagingSource(apiService, sessionStorage)
+        }
+    ).flow
 }

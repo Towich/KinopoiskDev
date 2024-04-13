@@ -5,12 +5,14 @@ import androidx.lifecycle.viewModelScope
 import com.towich.kinopoiskDev.data.model.MovieModel
 import com.towich.kinopoiskDev.domain.GetMoviesUseCase
 import com.towich.kinopoiskDev.data.network.ApiResult
+import com.towich.kinopoiskDev.domain.SetCurrentMovieUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class MainViewModel(
-    private val getMovies: GetMoviesUseCase
+    private val getMovies: GetMoviesUseCase,
+    private val setCurrentMovie: SetCurrentMovieUseCase
 ) : ViewModel() {
 
     private val _pagerMovies = MutableStateFlow<List<MovieModel>>(listOf())
@@ -33,5 +35,9 @@ class MainViewModel(
                 }
             }
         }
+    }
+
+    fun performSetCurrentMovie(movie: MovieModel?){
+        setCurrentMovie(movie = movie)
     }
 }

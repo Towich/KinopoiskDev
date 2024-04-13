@@ -30,7 +30,7 @@ class MainActivity : ComponentActivity() {
             VkTestTheme {
                 Navigation(
                     navController = navController,
-                    context = applicationContext,
+                    appContext = applicationContext,
                     viewModelFactory = viewModelFactory
                 )
             }

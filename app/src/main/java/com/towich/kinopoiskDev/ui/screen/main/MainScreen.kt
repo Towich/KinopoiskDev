@@ -95,11 +95,11 @@ fun MainScreen(
                 listOf(
                     MovieModel(
                         id = 4,
-                        name = "1+1",
-                        description = "bruh",
+                        name = "Загрузка",
+                        description = "Загрузка",
                         ratingKp = 9.87f,
                         posterPreviewUrl = null,
-                        genres = listOf("боевик")
+                        genres = listOf("Загрузка")
                     )
                 )
             })

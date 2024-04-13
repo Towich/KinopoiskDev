@@ -17,7 +17,9 @@ class MockApiService : ApiService {
         limit: Int,
         selectFields: List<String>,
         genre: String?,
-        country: String?
+        country: String?,
+        year: String?,
+        age: String?
     ): Response<MovieModelResponseRemote> {
         return Response.success(
             MovieModelResponseRemote(

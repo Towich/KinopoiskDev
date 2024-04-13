@@ -29,7 +29,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -41,12 +40,12 @@ fun FilterComponent(
     title: String,
     listOfChips: List<ChipModel>,
     chosenChip: ChipModel,
-    isFiltersShowsDefault: Boolean = false,
+    isFiltersShowsOnStart: Boolean = false,
     isLoading: Boolean,
     onChipClick: (chip: ChipModel) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var isFiltersShows by remember { mutableStateOf(isFiltersShowsDefault) }
+    var isFiltersShows by remember { mutableStateOf(isFiltersShowsOnStart) }
 
     Column(
         modifier = modifier

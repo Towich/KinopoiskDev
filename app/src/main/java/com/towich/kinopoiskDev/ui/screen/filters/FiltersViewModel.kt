@@ -6,6 +6,7 @@ import com.towich.kinopoiskDev.data.model.FieldModel
 import com.towich.kinopoiskDev.data.model.MovieModel
 import com.towich.kinopoiskDev.data.network.ApiResult
 import com.towich.kinopoiskDev.domain.GetCountriesUseCase
+import com.towich.kinopoiskDev.domain.GetFiltersUseCase
 import com.towich.kinopoiskDev.domain.GetGenresUseCase
 import com.towich.kinopoiskDev.domain.SetFiltersUseCase
 import com.towich.kinopoiskDev.ui.util.ScreenUiState
@@ -16,7 +17,8 @@ import kotlinx.coroutines.launch
 class FiltersViewModel(
     private val getGenres: GetGenresUseCase,
     private val getCountries: GetCountriesUseCase,
-    private val setFilters: SetFiltersUseCase
+    private val setFilters: SetFiltersUseCase,
+    private val getFilters: GetFiltersUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<ScreenUiState>(ScreenUiState.Initial)
@@ -69,5 +71,9 @@ class FiltersViewModel(
 
     fun applyFilters(listOfFilters: List<String?>){
         setFilters(listOfFilters = listOfFilters)
+    }
+
+    fun performGetFilters(): List<String?> {
+        return getFilters()
     }
 }

@@ -1,6 +1,7 @@
 package com.towich.kinopoiskDev.ui.screen.main.components
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,11 +23,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
+import com.towich.kinopoiskDev.R
 import com.towich.kinopoiskDev.data.model.MovieModel
 import java.util.Locale
 
@@ -56,36 +59,45 @@ fun CustomHorizontalPager(
                 contentScale = ContentScale.FillWidth,
                 modifier = Modifier
                     .fillMaxWidth()
-//                    .heightIn(max = 350.dp)
+                    .heightIn(max = 450.dp)
                     .shadow(
                         elevation = 15.dp,
                         shape = RoundedCornerShape(10)
                     )
                     .clip(shape = RoundedCornerShape(10)),
                 loading = {
-                    CircularProgressIndicator(
-                        strokeWidth = 10.dp,
+                    Box(
+                        contentAlignment = Alignment.Center,
                         modifier = Modifier
-                            .size(150.dp),
-                    )
+                            .fillMaxWidth()
+                            .height(450.dp)
+                            .background(color = MaterialTheme.colorScheme.surface)
+                    ) {
+                        CircularProgressIndicator(
+                            strokeWidth = 5.dp,
+                            modifier = Modifier
+                                .size(50.dp),
+                        )
+                    }
                 },
                 error = {
                     Box(
+                        contentAlignment = Alignment.Center,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(300.dp)
-                            .border(width = 1.dp, color = MaterialTheme.colorScheme.primary),
-                        contentAlignment = Alignment.Center
+                            .height(450.dp)
+                            .background(color = MaterialTheme.colorScheme.surface)
                     ) {
                         Text(
-                            text = "No photo!",
-                            textAlign = TextAlign.Center
+                            text = stringResource(id = R.string.no_photo),
+                            textAlign = TextAlign.Center,
+                            color = MaterialTheme.colorScheme.primary
                         )
                     }
                 }
             )
             Text(
-                text = currMovie.name,
+                text = currMovie.name ?: stringResource(id = R.string.null_field),
                 style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.colorScheme.onSurface,
                 fontWeight = FontWeight.Bold,

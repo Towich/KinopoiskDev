@@ -3,6 +3,7 @@ package com.towich.kinopoiskDev.di.module
 import com.towich.kinopoiskDev.data.repository.MainRepository
 import com.towich.kinopoiskDev.di.scope.AppScope
 import com.towich.kinopoiskDev.domain.GetCountriesUseCase
+import com.towich.kinopoiskDev.domain.GetFiltersUseCase
 import com.towich.kinopoiskDev.domain.GetGenresUseCase
 import com.towich.kinopoiskDev.domain.GetMoviesPageUseCase
 import com.towich.kinopoiskDev.domain.GetMoviesUseCase
@@ -37,5 +38,10 @@ object DomainModule {
     @AppScope
     fun provideSetFiltersUseCase(repository: MainRepository): SetFiltersUseCase {
         return SetFiltersUseCase(repository = repository)
+    }
+    @Provides
+    @AppScope
+    fun provideGetFiltersUseCase(repository: MainRepository): GetFiltersUseCase {
+        return GetFiltersUseCase(repository = repository)
     }
 }

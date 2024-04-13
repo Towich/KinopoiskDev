@@ -2,6 +2,7 @@ package com.towich.kinopoiskDev.di.module
 
 import com.towich.kinopoiskDev.di.scope.ActivityScope
 import com.towich.kinopoiskDev.domain.GetCountriesUseCase
+import com.towich.kinopoiskDev.domain.GetFiltersUseCase
 import com.towich.kinopoiskDev.domain.GetGenresUseCase
 import com.towich.kinopoiskDev.domain.GetMoviesPageUseCase
 import com.towich.kinopoiskDev.domain.GetMoviesUseCase
@@ -20,12 +21,14 @@ object ViewModelModule {
         getMoviesPage: GetMoviesPageUseCase,
         getGenresUse: GetGenresUseCase,
         getCountries: GetCountriesUseCase,
-        setFilters: SetFiltersUseCase
+        setFilters: SetFiltersUseCase,
+        getFilters: GetFiltersUseCase
     ): ViewModelFactory = ViewModelFactory(
         getMovies = getMovies,
         getMoviesPage = getMoviesPage,
         getGenres = getGenresUse,
         getCountries = getCountries,
-        setFilters = setFilters
+        setFilters = setFilters,
+        getFilters = getFilters
     )
 }

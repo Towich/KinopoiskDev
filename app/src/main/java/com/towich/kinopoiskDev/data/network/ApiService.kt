@@ -16,6 +16,8 @@ interface ApiService {
         @Query("selectFields") selectFields: List<String> = Constants.selectedFields,
         @Query("genres.name") genre: String? = null,
         @Query("countries.name") country: String? = null,
+        @Query("year") year: String? = null,
+        @Query("ageRating") age: String? = null
     ): Response<MovieModelResponseRemote>
 
     @GET(ApiRoutes.POSSIBLE_VALUES_BY_FIELD)

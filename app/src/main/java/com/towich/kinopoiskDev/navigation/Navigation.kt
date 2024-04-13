@@ -18,7 +18,7 @@ import com.towich.kinopoiskDev.util.ViewModelFactory
 @Composable
 fun Navigation(
     navController: NavHostController,
-    context: Context,
+    appContext: Context,
     viewModelFactory: ViewModelFactory
 ) {
     NavHost(
@@ -62,6 +62,7 @@ fun Navigation(
                 ViewModelProvider(it, viewModelFactory)[FiltersViewModel::class.java]
 
             FiltersScreen(
+                appContext = appContext,
                 viewModel = filtersViewModel,
                 onNavIconClicked = {
                     navController.popBackStack()

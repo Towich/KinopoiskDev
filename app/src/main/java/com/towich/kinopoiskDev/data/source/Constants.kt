@@ -9,5 +9,5 @@ object Constants {
     const val genresField = "genres.name"
     const val countriesField = "countries.name"
 
-    val selectedFields = listOf("id", "name", "description", "rating", "poster", "genres")
+    val selectedFields = listOf("id", "name", "description", "rating", "poster", "genres", "year", "ageRating")
 }

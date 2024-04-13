@@ -5,11 +5,12 @@ import androidx.paging.PagingState
 import com.towich.kinopoiskDev.data.model.MovieModel
 import com.towich.kinopoiskDev.data.network.ApiService
 import com.towich.kinopoiskDev.data.source.SessionStorage
+import retrofit2.HttpException
 
 class MoviesPagingSource(
     private val apiService: ApiService,
     private val sessionStorage: SessionStorage
-): PagingSource<Int, MovieModel>() {
+) : PagingSource<Int, MovieModel>() {
     override fun getRefreshKey(state: PagingState<Int, MovieModel>): Int? {
         return state.anchorPosition?.let { anchorPosition ->
             state.closestPageToPosition(anchorPosition)?.prevKey?.plus(1)
@@ -18,21 +19,23 @@ class MoviesPagingSource(
     }
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, MovieModel> {
-        return try {
-            val page = params.key ?: 1
+        val page = params.key ?: 1
+        try {
             val response = apiService.getMovies(
                 page = page,
                 genre = sessionStorage.listOfFilters[0],
-                country = sessionStorage.listOfFilters[1]
+                country = sessionStorage.listOfFilters[1],
+                year = sessionStorage.listOfFilters[2],
+                age = sessionStorage.listOfFilters[3],
             )
 
-            LoadResult.Page(
+            return LoadResult.Page(
                 data = response.body()!!.docs.map { it.convertToMovieModel() },
                 prevKey = if (page == 1) null else page.minus(1),
                 nextKey = if (response.body()!!.docs.isEmpty()) null else page.plus(1),
             )
         } catch (e: Exception) {
-            LoadResult.Error(e)
+            return LoadResult.Error(e)
         }
     }
 }

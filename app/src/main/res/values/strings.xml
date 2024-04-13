@@ -7,4 +7,13 @@
     <string name="filters_screen_genre">Genre</string>
     <string name="filters_screen_country">Country</string>
     <string name="filters_screen_apply_button">Apply</string>
+    <string name="null_field">No information!</string>
+    <string name="loading">Loading</string>
+    <string name="filters_screen_year">Year</string>
+    <string name="no_photo">No photo!</string>
+    <string name="no_info_name">No info about name!</string>
+    <string name="year_error">Year can be from 1874 to 2050!</string>
+    <string name="cleared">Cleared</string>
+    <string name="filters_screen_age_rating">Age rating</string>
+    <string name="error">Error</string>
 </resources>

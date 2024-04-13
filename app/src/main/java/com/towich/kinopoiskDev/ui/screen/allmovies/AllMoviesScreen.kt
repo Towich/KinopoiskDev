@@ -1,11 +1,13 @@
 package com.towich.kinopoiskDev.ui.screen.allmovies
 
 import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
@@ -30,6 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -85,7 +88,9 @@ fun AllMoviesScreen(
     ) { scaffoldPadding ->
         LazyVerticalStaggeredGrid(
             columns = StaggeredGridCells.Fixed(2),
-            modifier = Modifier.padding(scaffoldPadding),
+            modifier = Modifier
+                .padding(scaffoldPadding)
+                .fillMaxSize(),
             contentPadding = PaddingValues(all = 20.dp),
             verticalItemSpacing = 20.dp,
             horizontalArrangement = Arrangement.spacedBy(20.dp)
@@ -107,95 +112,127 @@ fun AllMoviesScreen(
                             )
                             .clip(shape = RoundedCornerShape(10)),
                         loading = {
-                            CircularProgressIndicator(
-                                strokeWidth = 10.dp,
+                            Box(
+                                contentAlignment = Alignment.Center,
                                 modifier = Modifier
-                                    .size(150.dp),
-                            )
+                                    .fillMaxWidth()
+                                    .height(250.dp)
+                                    .background(color = MaterialTheme.colorScheme.surface)
+                            ) {
+                                CircularProgressIndicator(
+                                    strokeWidth = 5.dp,
+                                    modifier = Modifier
+                                        .size(50.dp),
+                                )
+                            }
                         },
                         error = {
                             Box(
+                                contentAlignment = Alignment.Center,
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .height(300.dp)
-                                    .border(width = 1.dp, color = MaterialTheme.colorScheme.primary),
-                                contentAlignment = Alignment.Center
+                                    .height(250.dp)
+                                    .background(color = MaterialTheme.colorScheme.surface)
                             ) {
                                 Text(
-                                    text = "No photo!",
-                                    textAlign = TextAlign.Center
+                                    text = stringResource(id = R.string.no_photo),
+                                    textAlign = TextAlign.Center,
+                                    color = MaterialTheme.colorScheme.primary
                                 )
                             }
                         }
                     )
 
                     Text(
-                        text = movies[index]?.name ?: "null",
+                        text = movies[index]?.name ?: stringResource(id = R.string.no_info_name),
                         style = MaterialTheme.typography.titleMedium,
                         color = MaterialTheme.colorScheme.onSurface,
                         modifier = Modifier.padding(top = 10.dp)
                     )
                 }
-
             }
+            item {
+                when (movies.loadState.append) { // Pagination
+                    is LoadState.Error -> {
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = (movies.loadState.append as LoadState.Error).error.message
+                                    ?: stringResource(
+                                        id = R.string.error
+                                    ),
+                                style = MaterialTheme.typography.titleLarge,
+                                color = MaterialTheme.colorScheme.primary,
+                                textAlign = TextAlign.Center
+                            )
+                        }
+                    }
 
-            when (movies.loadState.refresh) { //FIRST LOAD
-
-                is LoadState.Error -> {
-                    //TODO Error Item
-                    //state.error to get error message
-                }
-
-                is LoadState.Loading -> { // Loading UI
-                    item {
+                    is LoadState.Loading -> { // Pagination Loading UI
                         Column(
                             modifier = Modifier
+                                .padding(top = 64.dp, bottom = 200.dp)
                                 .fillMaxWidth(),
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.Center,
                         ) {
                             Text(
-                                modifier = Modifier
-                                    .padding(8.dp),
-                                text = "Refresh Loading",
+                                text = stringResource(id = R.string.loading),
                                 style = MaterialTheme.typography.titleMedium,
                                 color = MaterialTheme.colorScheme.onSurface
                             )
 
                             CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
                         }
+
                     }
-                }
 
-                else -> {}
-            }
-
-            when (movies.loadState.append) { // Pagination
-                is LoadState.Error -> {
-                    //TODO Pagination Error Item
-                    //state.error to get error message
-                }
-
-                is LoadState.Loading -> { // Pagination Loading UI
-                    item {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth(),
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center,
-                        ) {
-                            Text(text = "Pagination Loading")
-
-                            CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
-                        }
+                    else -> {
                     }
-                }
-
-                else -> {
                 }
             }
         }
 
+        when (movies.loadState.refresh) { // FIRST LOAD
 
+            is LoadState.Error -> {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = (movies.loadState.refresh as LoadState.Error).error.message
+                            ?: stringResource(id = R.string.error),
+                        style = MaterialTheme.typography.titleLarge,
+                        color = MaterialTheme.colorScheme.primary,
+                        textAlign = TextAlign.Center
+                    )
+                }
+            }
+
+            is LoadState.Loading -> { // Loading UI
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center,
+                ) {
+                    Text(
+                        modifier = Modifier
+                            .padding(8.dp),
+                        text = stringResource(id = R.string.loading),
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+
+                    CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
+                }
+
+            }
+
+            else -> {}
+        }
     }
 }

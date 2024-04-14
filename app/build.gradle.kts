@@ -114,4 +114,7 @@ dependencies {
     ksp("androidx.room:room-compiler:2.6.1")
     ksp("androidx.lifecycle:lifecycle-common:2.7.0")
     annotationProcessor("androidx.room:room-compiler:2.6.1")
+
+    // Mockito
+    testImplementation("org.mockito:mockito-core:3.11.2")
 }

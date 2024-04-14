@@ -174,7 +174,7 @@ fun FiltersScreen(
                     modifier = Modifier
                         .padding(top = 20.dp),
                     chosenChip = ChipModel(chosenGenre),
-                    isFiltersShowsOnStart = true,
+                    isFiltersShowsOnStart = false,
                     isLoading = uiState is ScreenUiState.Loading,
                     onChipClick = { chip ->
                         chosenGenre = chip.name

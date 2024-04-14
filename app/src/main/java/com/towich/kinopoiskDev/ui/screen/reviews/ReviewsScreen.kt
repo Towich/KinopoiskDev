@@ -43,7 +43,7 @@ fun ReviewsScreen(
     viewModel: ReviewsViewModel,
     onNavIconClicked: () -> Unit
 ) {
-    val reviews = viewModel.performGetReviews().collectAsLazyPagingItems()
+    val reviews = viewModel.reviews.collectAsLazyPagingItems()
 
     Scaffold(
         topBar = {

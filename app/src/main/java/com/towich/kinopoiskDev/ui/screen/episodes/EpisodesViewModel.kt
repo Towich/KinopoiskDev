@@ -14,7 +14,7 @@ class EpisodesViewModel(
     private val getCurrentSeason: GetCurrentSeasonUseCase,
 ) : ViewModel() {
 
-    fun performGetEpisodes(): Flow<PagingData<EpisodeModel>> = getEpisodesPage().cachedIn(viewModelScope)
+    val episodes = getEpisodesPage().cachedIn(viewModelScope)
 
     fun performGetCurrentSeason(): Int? {
         return getCurrentSeason()

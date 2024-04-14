@@ -1,13 +1,12 @@
 package com.towich.kinopoiskDev.ui.screen.allmovies
 
-import android.util.Log
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -16,29 +15,39 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
@@ -54,39 +63,101 @@ fun AllMoviesScreen(
     onFilterIconClicked: () -> Unit,
     onNavIconClicked: () -> Unit
 ) {
-    val movies = viewModel.performGetMovies().collectAsLazyPagingItems()
+    val movies = viewModel.getMovies().collectAsLazyPagingItems()
+    val searchedMovies = viewModel.searchedMovies.collectAsLazyPagingItems()
+    val searchQuery by viewModel.search.collectAsState()
+    val showSearchBar by viewModel.isSearchShowing.collectAsState()
 
     Scaffold(
         topBar = {
-            CenterAlignedTopAppBar(
-                title = {
-                    Text(
-                        text = stringResource(id = R.string.all_movies_screen_title),
-                        fontWeight = FontWeight.Bold
+            Box(modifier = Modifier
+                .height(64.dp)
+                .fillMaxWidth()
+            ){
+                if(showSearchBar){
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 5.dp, start = 20.dp, end = 5.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        OutlinedTextField(
+                            value = searchQuery,
+                            onValueChange = { newSearchQuery ->
+                                viewModel.setSearch(query = newSearchQuery)
+                            },
+                            shape = CircleShape,
+                            textStyle = MaterialTheme.typography.bodySmall,
+                            colors = TextFieldDefaults.colors(
+                                unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                                focusedContainerColor = MaterialTheme.colorScheme.surface
+                            ),
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+                            singleLine = true,
+                            modifier = Modifier
+                                .fillMaxWidth(0.85f)
+                                .height(48.dp)
+                        )
+                        IconButton(
+                            onClick = {
+                                viewModel.toggleIsSearchShowing()
+                                viewModel.setSearch("")
+                            }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Clear,
+                                contentDescription = "Clear",
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier
+                                    .size(28.dp)
+                            )
+                        }
+                    }
+
+                }
+                else{
+                    CenterAlignedTopAppBar(
+                        title = {
+                            Text(
+                                text = stringResource(id = R.string.all_movies_screen_title),
+                                fontWeight = FontWeight.Bold
+                            )
+                        },
+                        navigationIcon = {
+                            IconButton(onClick = { onNavIconClicked() }) {
+                                Icon(
+                                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
+                                    contentDescription = "All films",
+                                    modifier = Modifier.size(36.dp),
+                                    tint = MaterialTheme.colorScheme.primary
+                                )
+                            }
+                        },
+                        actions = {
+                            IconButton(onClick = { onFilterIconClicked() }) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.filter_icon),
+                                    contentDescription = "Filters",
+                                    modifier = Modifier.size(28.dp),
+                                    tint = MaterialTheme.colorScheme.primary
+                                )
+                            }
+                            IconButton(onClick = { viewModel.toggleIsSearchShowing() }) {
+                                Icon(
+                                    imageVector = Icons.Default.Search,
+                                    contentDescription = "Search",
+                                    modifier = Modifier.size(28.dp),
+                                    tint = MaterialTheme.colorScheme.primary
+                                )
+                            }
+                        },
+                        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                            containerColor = MaterialTheme.colorScheme.background
+                        )
                     )
-                },
-                navigationIcon = {
-                    IconButton(onClick = { onNavIconClicked() }) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
-                            contentDescription = "All films",
-                            modifier = Modifier.size(36.dp)
-                        )
-                    }
-                },
-                actions = {
-                    IconButton(onClick = { onFilterIconClicked() }) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.filter_icon),
-                            contentDescription = "Filters",
-                            modifier = Modifier.size(28.dp)
-                        )
-                    }
-                },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background
-                )
-            )
+                }
+            }
         }
     ) { scaffoldPadding ->
         LazyVerticalStaggeredGrid(
@@ -98,12 +169,12 @@ fun AllMoviesScreen(
             verticalItemSpacing = 20.dp,
             horizontalArrangement = Arrangement.spacedBy(20.dp)
         ) {
-            items(movies.itemCount) { index ->
+            items(if(searchQuery != "") searchedMovies.itemCount else movies.itemCount) { index ->
                 Column(
                     modifier = Modifier.fillMaxWidth(0.4f)
                 ) {
                     SubcomposeAsyncImage(
-                        model = movies[index]?.posterPreviewUrl,
+                        model = (if(searchQuery != "") searchedMovies else movies)[index]?.posterPreviewUrl,
                         contentDescription = "Poster",
                         contentScale = ContentScale.FillWidth,
                         loading = {
@@ -145,13 +216,13 @@ fun AllMoviesScreen(
                             )
                             .clip(shape = RoundedCornerShape(10))
                             .clickable {
-                                viewModel.performSetCurrentMovie(movies[index]!!)
+                                viewModel.performSetCurrentMovie((if (searchQuery != "") searchedMovies else movies)[index]!!)
                                 onMovieClicked()
                             }
                     )
 
                     Text(
-                        text = movies[index]?.name ?: stringResource(id = R.string.no_info_name),
+                        text = (if(searchQuery != "") searchedMovies else movies)[index]?.name ?: stringResource(id = R.string.no_info_name),
                         style = MaterialTheme.typography.titleMedium,
                         color = MaterialTheme.colorScheme.onSurface,
                         modifier = Modifier.padding(top = 10.dp)
@@ -166,7 +237,7 @@ fun AllMoviesScreen(
                             contentAlignment = Alignment.Center
                         ) {
                             Text(
-                                text = (movies.loadState.append as LoadState.Error).error.message
+                                text = ((if(searchQuery != "") searchedMovies else movies).loadState.append as LoadState.Error).error.message
                                     ?: stringResource(
                                         id = R.string.error
                                     ),
@@ -202,7 +273,7 @@ fun AllMoviesScreen(
             }
         }
 
-        when (movies.loadState.refresh) { // FIRST LOAD
+        when ((if(searchQuery != "") searchedMovies else movies).loadState.refresh) { // FIRST LOAD
 
             is LoadState.Error -> {
                 Box(
@@ -210,7 +281,7 @@ fun AllMoviesScreen(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = (movies.loadState.refresh as LoadState.Error).error.message
+                        text = ((if(searchQuery != "") searchedMovies else movies).loadState.refresh as LoadState.Error).error.message
                             ?: stringResource(id = R.string.error),
                         style = MaterialTheme.typography.titleLarge,
                         color = MaterialTheme.colorScheme.primary,

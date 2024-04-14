@@ -9,6 +9,7 @@ import com.towich.kinopoiskDev.data.model.ReviewModel
 import com.towich.kinopoiskDev.data.model.SeasonModel
 import com.towich.kinopoiskDev.data.network.serializable.MovieModelResponseRemote
 import com.towich.kinopoiskDev.data.network.ApiResult
+import com.towich.kinopoiskDev.data.network.serializable.PosterModelResponseRemote
 import kotlinx.coroutines.flow.Flow
 
 interface MainRepository {
@@ -33,4 +34,8 @@ interface MainRepository {
     fun getEpisodesPage(): Flow<PagingData<EpisodeModel>>
 
     fun getReviewPage(): Flow<PagingData<ReviewModel>>
+
+    fun searchMovieByName(query: String): Flow<PagingData<MovieModel>>
+
+    suspend fun getPosters(): ApiResult<PosterModelResponseRemote>
 }

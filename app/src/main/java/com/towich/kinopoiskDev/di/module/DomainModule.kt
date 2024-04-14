@@ -11,8 +11,10 @@ import com.towich.kinopoiskDev.domain.GetFiltersUseCase
 import com.towich.kinopoiskDev.domain.GetGenresUseCase
 import com.towich.kinopoiskDev.domain.GetMoviesPageUseCase
 import com.towich.kinopoiskDev.domain.GetMoviesUseCase
+import com.towich.kinopoiskDev.domain.GetPostersUseCase
 import com.towich.kinopoiskDev.domain.GetReviewsPageUseCase
 import com.towich.kinopoiskDev.domain.GetSeasonsPageUseCase
+import com.towich.kinopoiskDev.domain.SearchMoviesPageUseCase
 import com.towich.kinopoiskDev.domain.SetCurrentMovieUseCase
 import com.towich.kinopoiskDev.domain.SetCurrentSeasonUseCase
 import com.towich.kinopoiskDev.domain.SetFiltersUseCase
@@ -91,5 +93,15 @@ object DomainModule {
     @AppScope
     fun provideGetReviewsPageUseCase(repository: MainRepository): GetReviewsPageUseCase {
         return GetReviewsPageUseCase(repository = repository)
+    }
+    @Provides
+    @AppScope
+    fun provideSearchMoviesPageUseCase(repository: MainRepository): SearchMoviesPageUseCase {
+        return SearchMoviesPageUseCase(repository = repository)
+    }
+    @Provides
+    @AppScope
+    fun provideGetPostersUseCase(repository: MainRepository): GetPostersUseCase {
+        return GetPostersUseCase(repository = repository)
     }
 }

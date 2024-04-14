@@ -9,7 +9,8 @@ import retrofit2.HttpException
 
 class MoviesPagingSource(
     private val apiService: ApiService,
-    private val sessionStorage: SessionStorage
+    private val sessionStorage: SessionStorage,
+    private val query: String? = null,
 ) : PagingSource<Int, MovieModel>() {
     override fun getRefreshKey(state: PagingState<Int, MovieModel>): Int? {
         return state.anchorPosition?.let { anchorPosition ->
@@ -21,13 +22,22 @@ class MoviesPagingSource(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, MovieModel> {
         val page = params.key ?: 1
         try {
-            val response = apiService.getMovies(
-                page = page,
-                genre = sessionStorage.listOfFilters[0],
-                country = sessionStorage.listOfFilters[1],
-                year = sessionStorage.listOfFilters[2],
-                age = sessionStorage.listOfFilters[3],
-            )
+            val response = if (query == null) {
+                apiService.getMovies(
+                    page = page,
+                    genre = sessionStorage.listOfFilters[0],
+                    country = sessionStorage.listOfFilters[1],
+                    year = sessionStorage.listOfFilters[2],
+                    age = sessionStorage.listOfFilters[3],
+                )
+            }
+            else {
+                apiService.searchMovie(
+                    page = page,
+                    query = query
+                )
+            }
+
 
             return LoadResult.Page(
                 data = response.body()!!.docs.map { it.convertToMovieModel() },

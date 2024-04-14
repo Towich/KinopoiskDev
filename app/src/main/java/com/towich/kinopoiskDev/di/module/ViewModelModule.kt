@@ -10,8 +10,10 @@ import com.towich.kinopoiskDev.domain.GetFiltersUseCase
 import com.towich.kinopoiskDev.domain.GetGenresUseCase
 import com.towich.kinopoiskDev.domain.GetMoviesPageUseCase
 import com.towich.kinopoiskDev.domain.GetMoviesUseCase
+import com.towich.kinopoiskDev.domain.GetPostersUseCase
 import com.towich.kinopoiskDev.domain.GetReviewsPageUseCase
 import com.towich.kinopoiskDev.domain.GetSeasonsPageUseCase
+import com.towich.kinopoiskDev.domain.SearchMoviesPageUseCase
 import com.towich.kinopoiskDev.domain.SetCurrentMovieUseCase
 import com.towich.kinopoiskDev.domain.SetCurrentSeasonUseCase
 import com.towich.kinopoiskDev.domain.SetFiltersUseCase
@@ -39,6 +41,8 @@ object ViewModelModule {
         getCurrentSeason: GetCurrentSeasonUseCase,
         getEpisodesPage: GetEpisodesPageUseCase,
         getReviewsPage: GetReviewsPageUseCase,
+        searchMoviesPage: SearchMoviesPageUseCase,
+        getPosters: GetPostersUseCase
     ): ViewModelFactory = ViewModelFactory(
         getMovies = getMovies,
         getMoviesPage = getMoviesPage,
@@ -53,6 +57,8 @@ object ViewModelModule {
         setCurrentSeason = setCurrentSeason,
         getCurrentSeason = getCurrentSeason,
         getEpisodesPage = getEpisodesPage,
-        getReviewsPage = getReviewsPage
+        getReviewsPage = getReviewsPage,
+        searchMoviesPage = searchMoviesPage,
+        getPosters = getPosters
     )
 }

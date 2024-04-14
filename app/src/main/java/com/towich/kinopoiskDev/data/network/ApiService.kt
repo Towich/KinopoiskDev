@@ -4,6 +4,7 @@ import com.towich.kinopoiskDev.data.model.FieldModel
 import com.towich.kinopoiskDev.data.network.serializable.ActorModelResponseRemote
 import com.towich.kinopoiskDev.data.network.serializable.EpisodeModelResponseRemote
 import com.towich.kinopoiskDev.data.network.serializable.MovieModelResponseRemote
+import com.towich.kinopoiskDev.data.network.serializable.PosterModelResponseRemote
 import com.towich.kinopoiskDev.data.network.serializable.ReviewModelResponseRemote
 import com.towich.kinopoiskDev.data.network.serializable.SeasonModelResponseRemote
 import com.towich.kinopoiskDev.data.source.Constants
@@ -34,7 +35,7 @@ interface ApiService {
         @Query("page") page: Int,
         @Query("limit") limit: Int = Constants.pageLimit,
         @Query("movies.id") movieId: String,
-        @Query("selectFields") selectFields: List<String> = Constants.actorSelectedFields,
+        @Query("selectFields") selectFields: List<String> = Constants.actorSelectedFields
     ): Response<ActorModelResponseRemote>
 
     @GET(ApiRoutes.SEASONS)
@@ -42,7 +43,7 @@ interface ApiService {
         @Query("page") page: Int,
         @Query("limit") limit: Int = Constants.pageLimit,
         @Query("movieId") movieId: List<String>,
-        @Query("selectFields") selectFields: List<String> = Constants.seasonSelectedFields,
+        @Query("selectFields") selectFields: List<String> = Constants.seasonSelectedFields
     ): Response<SeasonModelResponseRemote>
 
 
@@ -52,7 +53,7 @@ interface ApiService {
         @Query("limit") limit: Int = Constants.pageLimit,
         @Query("movieId") movieId: List<String>,
         @Query("number") number: List<String>,
-        @Query("selectFields") selectFields: List<String> = Constants.episodesSelectedFields,
+        @Query("selectFields") selectFields: List<String> = Constants.episodesSelectedFields
     ): Response<EpisodeModelResponseRemote>
 
 
@@ -61,6 +62,20 @@ interface ApiService {
         @Query("page") page: Int,
         @Query("limit") limit: Int = Constants.pageLimit,
         @Query("movieId") movieId: List<String>,
-        @Query("selectFields") selectFields: List<String> = Constants.reviewsSelectedFields,
+        @Query("selectFields") selectFields: List<String> = Constants.reviewsSelectedFields
     ): Response<ReviewModelResponseRemote>
+
+    @GET(ApiRoutes.SEARCH)
+    suspend fun searchMovie(
+        @Query("page") page: Int,
+        @Query("limit") limit: Int = Constants.pageLimit,
+        @Query("query") query: String
+    ): Response<MovieModelResponseRemote>
+
+    @GET(ApiRoutes.IMAGES)
+    suspend fun getImages(
+        @Query("page") page: Int = 1,
+        @Query("limit") limit: Int = Constants.pageLimit,
+        @Query("movieId") movieId: List<String>
+    ): Response<PosterModelResponseRemote>
 }

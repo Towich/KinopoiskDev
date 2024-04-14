@@ -15,6 +15,7 @@ import com.towich.kinopoiskDev.data.util.MoviesPagingSource
 import com.towich.kinopoiskDev.data.network.ApiService
 import com.towich.kinopoiskDev.data.network.serializable.MovieModelResponseRemote
 import com.towich.kinopoiskDev.data.network.ApiResult
+import com.towich.kinopoiskDev.data.network.serializable.PosterModelResponseRemote
 import com.towich.kinopoiskDev.data.util.ActorsPagingSource
 import com.towich.kinopoiskDev.data.util.EpisodesPagingSource
 import com.towich.kinopoiskDev.data.util.ReviewsPagingSource
@@ -27,12 +28,18 @@ class MainRepositoryImpl(
 ) : MainRepository {
 
     override suspend fun getMovies(): ApiResult<MovieModelResponseRemote> {
-        val response = apiService.getMovies(page = 1)
-        return if(response.isSuccessful){
-            ApiResult.Success(response.body() ?: MovieModelResponseRemote(docs = listOf()))
-        } else{
-            ApiResult.Error(response.message())
+        return try {
+            val response = apiService.getMovies(page = 1)
+
+            if(response.isSuccessful){
+                ApiResult.Success(response.body() ?: MovieModelResponseRemote(docs = listOf()))
+            } else{
+                ApiResult.Error(response.message())
+            }
+        } catch (e: Exception){
+            ApiResult.Error(e.message ?: "unknown error")
         }
+
     }
 
     override fun getMoviesPage(): Flow<PagingData<MovieModel>> = Pager(
@@ -48,12 +55,16 @@ class MainRepositoryImpl(
         return if(sessionStorage.listOfGenres != null)
             ApiResult.Success(sessionStorage.listOfGenres!!)
         else{
-            val response = apiService.getAllPossibleValuesByField(field = Constants.genresField)
-            if(response.isSuccessful){
-                sessionStorage.listOfGenres = response.body()
-                ApiResult.Success(response.body() ?: listOf())
-            } else{
-                ApiResult.Error(response.message())
+            try {
+                val response = apiService.getAllPossibleValuesByField(field = Constants.genresField)
+                if(response.isSuccessful){
+                    sessionStorage.listOfGenres = response.body()
+                    ApiResult.Success(response.body() ?: listOf())
+                } else{
+                    ApiResult.Error(response.message())
+                }
+            } catch (e: Exception){
+                ApiResult.Error(e.message ?: "unknown error")
             }
         }
     }
@@ -62,12 +73,17 @@ class MainRepositoryImpl(
         return if(sessionStorage.listOfCountries != null)
             ApiResult.Success(sessionStorage.listOfCountries!!)
         else{
-            val response = apiService.getAllPossibleValuesByField(field = Constants.countriesField)
-            if(response.isSuccessful){
-                sessionStorage.listOfCountries = response.body()
-                ApiResult.Success(response.body() ?: listOf())
-            } else{
-                ApiResult.Error(response.message())
+            try {
+                val response =
+                    apiService.getAllPossibleValuesByField(field = Constants.countriesField)
+                if (response.isSuccessful) {
+                    sessionStorage.listOfCountries = response.body()
+                    ApiResult.Success(response.body() ?: listOf())
+                } else {
+                    ApiResult.Error(response.message())
+                }
+            } catch (e: Exception){
+                ApiResult.Error(e.message ?: "unknown error")
             }
         }
     }
@@ -131,4 +147,33 @@ class MainRepositoryImpl(
             ReviewsPagingSource(apiService, sessionStorage)
         }
     ).flow
+
+    override fun searchMovieByName(query: String): Flow<PagingData<MovieModel>> = Pager(
+        config = PagingConfig(
+            pageSize = Constants.pageLimit,
+        ),
+        pagingSourceFactory = {
+            MoviesPagingSource(
+                apiService = apiService,
+                sessionStorage = sessionStorage,
+                query = query
+            )
+        }
+    ).flow
+
+    override suspend fun getPosters(): ApiResult<PosterModelResponseRemote> {
+        return try {
+            val response = apiService.getImages(
+                movieId = listOf(sessionStorage.currentMovie?.id.toString())
+            )
+
+            if(response.isSuccessful){
+                ApiResult.Success(response.body() ?: PosterModelResponseRemote(docs = listOf()))
+            } else{
+                ApiResult.Error(response.message())
+            }
+        } catch (e: Exception){
+            ApiResult.Error(e.message ?: "unknown error")
+        }
+    }
 }

@@ -9,6 +9,7 @@ import com.towich.kinopoiskDev.data.model.VotesModel
 import com.towich.kinopoiskDev.data.network.serializable.ActorModelRemote
 import com.towich.kinopoiskDev.data.network.serializable.EpisodeModelRemote
 import com.towich.kinopoiskDev.data.network.serializable.MovieModelRemote
+import com.towich.kinopoiskDev.data.network.serializable.PosterModelRemote
 import com.towich.kinopoiskDev.data.network.serializable.ReviewModelRemote
 import com.towich.kinopoiskDev.data.network.serializable.SeasonModelRemote
 
@@ -136,6 +137,13 @@ object Constants {
             type = "Позитивный",
             review = "отзыв большой и позитивный...",
             author = "я"
+        )
+    )
+
+    val postersTest = listOf(
+        PosterModelRemote(
+            url = null,
+            previewUrl = null
         )
     )
 }

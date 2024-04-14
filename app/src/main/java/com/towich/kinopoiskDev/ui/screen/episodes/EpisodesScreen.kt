@@ -48,7 +48,7 @@ fun EpisodesScreen(
     viewModel: EpisodesViewModel,
     onNavIconClicked: () -> Unit
 ) {
-    val episodes = viewModel.performGetEpisodes().collectAsLazyPagingItems()
+    val episodes = viewModel.episodes.collectAsLazyPagingItems()
     val currentSeason = viewModel.performGetCurrentSeason()
 
     Scaffold(

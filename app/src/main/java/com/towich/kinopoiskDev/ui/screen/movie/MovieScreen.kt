@@ -1,6 +1,7 @@
 package com.towich.kinopoiskDev.ui.screen.movie
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -34,6 +35,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -52,10 +54,11 @@ import coil.compose.SubcomposeAsyncImage
 import com.towich.kinopoiskDev.R
 import com.towich.kinopoiskDev.data.model.MovieModel
 import com.towich.kinopoiskDev.data.source.Constants
+import com.towich.kinopoiskDev.ui.screen.movie.components.AwesomeCarousel
 import com.towich.kinopoiskDev.ui.theme.Yellow
 import java.util.Locale
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun MovieScreen(
@@ -65,8 +68,11 @@ fun MovieScreen(
     onReviewsButtonNavClicked: () -> Unit
 ) {
     val movie: MovieModel = viewModel.performGetCurrentMovie() ?: Constants.movieTest
-    val actors = viewModel.performGetActors().collectAsLazyPagingItems()
-    val seasons = viewModel.performGetSeasons().collectAsLazyPagingItems()
+    val actors = viewModel.actors.collectAsLazyPagingItems()
+    val seasons = viewModel.seasons.collectAsLazyPagingItems()
+    val posters = viewModel.posters.collectAsState()
+
+    viewModel.performGetPosters()
 
     Scaffold(
         topBar = {
@@ -101,48 +107,52 @@ fun MovieScreen(
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
         ) {
-            SubcomposeAsyncImage(
-                model = movie.posterPreviewUrl,
-                contentDescription = "Poster",
-                contentScale = ContentScale.FillWidth,
-                modifier = Modifier
-                    .fillMaxWidth(1f)
-                    .heightIn(max = 600.dp)
-                    .shadow(
-                        elevation = 15.dp,
-                        shape = RoundedCornerShape(bottomStart = 30.dp, bottomEnd = 30.dp)
-                    ),
-                loading = {
-                    Box(
-                        contentAlignment = Alignment.Center,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(600.dp)
-                            .background(color = MaterialTheme.colorScheme.surface)
-                    ) {
-                        CircularProgressIndicator(
-                            strokeWidth = 5.dp,
+            if (posters.value.isNotEmpty()) {
+                AwesomeCarousel(posters = posters.value)
+            } else {
+                SubcomposeAsyncImage(
+                    model = movie.posterPreviewUrl,
+                    contentDescription = "Poster",
+                    contentScale = ContentScale.FillHeight,
+                    modifier = Modifier
+                        .fillMaxWidth(1f)
+                        .height(600.dp)
+                        .shadow(
+                            elevation = 15.dp,
+                            shape = RoundedCornerShape(bottomStart = 30.dp, bottomEnd = 30.dp)
+                        ),
+                    loading = {
+                        Box(
+                            contentAlignment = Alignment.Center,
                             modifier = Modifier
-                                .size(50.dp),
-                        )
+                                .fillMaxWidth()
+                                .height(600.dp)
+                                .background(color = MaterialTheme.colorScheme.surface)
+                        ) {
+                            CircularProgressIndicator(
+                                strokeWidth = 5.dp,
+                                modifier = Modifier
+                                    .size(50.dp),
+                            )
+                        }
+                    },
+                    error = {
+                        Box(
+                            contentAlignment = Alignment.Center,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(600.dp)
+                                .background(color = MaterialTheme.colorScheme.surface)
+                        ) {
+                            Text(
+                                text = stringResource(id = R.string.no_photo),
+                                textAlign = TextAlign.Center,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                        }
                     }
-                },
-                error = {
-                    Box(
-                        contentAlignment = Alignment.Center,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(600.dp)
-                            .background(color = MaterialTheme.colorScheme.surface)
-                    ) {
-                        Text(
-                            text = stringResource(id = R.string.no_photo),
-                            textAlign = TextAlign.Center,
-                            color = MaterialTheme.colorScheme.primary
-                        )
-                    }
-                }
-            )
+                )
+            }
 
             Column(
                 modifier = Modifier
@@ -250,18 +260,19 @@ fun MovieScreen(
                                 Column(
 
                                 ) {
-                                    Box(modifier = Modifier
-                                        .width(100.dp)
-                                        .height(150.dp)
-                                        .shadow(
-                                            elevation = 5.dp,
-                                            shape = RoundedCornerShape(15.dp)
-                                        )
-                                        .clip(shape = RoundedCornerShape(15.dp))
-                                        .background(
-                                            color = MaterialTheme.colorScheme.surface,
-                                            shape = CircleShape
-                                        ),
+                                    Box(
+                                        modifier = Modifier
+                                            .width(100.dp)
+                                            .height(150.dp)
+                                            .shadow(
+                                                elevation = 5.dp,
+                                                shape = RoundedCornerShape(15.dp)
+                                            )
+                                            .clip(shape = RoundedCornerShape(15.dp))
+                                            .background(
+                                                color = MaterialTheme.colorScheme.surface,
+                                                shape = CircleShape
+                                            ),
                                         contentAlignment = Alignment.Center
                                     ) {
 
@@ -280,13 +291,14 @@ fun MovieScreen(
                                 Column(
                                     modifier = Modifier.padding(start = 20.dp)
                                 ) {
-                                    Box(modifier = Modifier
-                                        .width(100.dp)
-                                        .height(150.dp)
-                                        .background(
-                                            color = MaterialTheme.colorScheme.surface,
-                                            shape = RoundedCornerShape(15.dp)
-                                        ),
+                                    Box(
+                                        modifier = Modifier
+                                            .width(100.dp)
+                                            .height(150.dp)
+                                            .background(
+                                                color = MaterialTheme.colorScheme.surface,
+                                                shape = RoundedCornerShape(15.dp)
+                                            ),
                                         contentAlignment = Alignment.Center
                                     ) {
                                         CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
@@ -310,13 +322,14 @@ fun MovieScreen(
                                 Column(
 
                                 ) {
-                                    Box(modifier = Modifier
-                                        .width(100.dp)
-                                        .height(150.dp)
-                                        .background(
-                                            color = MaterialTheme.colorScheme.surface,
-                                            shape = RoundedCornerShape(15.dp)
-                                        ),
+                                    Box(
+                                        modifier = Modifier
+                                            .width(100.dp)
+                                            .height(150.dp)
+                                            .background(
+                                                color = MaterialTheme.colorScheme.surface,
+                                                shape = RoundedCornerShape(15.dp)
+                                            ),
                                         contentAlignment = Alignment.Center
                                     ) {
 
@@ -335,13 +348,14 @@ fun MovieScreen(
                                 Column(
                                     modifier = Modifier.padding(start = 20.dp)
                                 ) {
-                                    Box(modifier = Modifier
-                                        .width(100.dp)
-                                        .height(150.dp)
-                                        .background(
-                                            color = MaterialTheme.colorScheme.surface,
-                                            shape = RoundedCornerShape(15.dp)
-                                        ),
+                                    Box(
+                                        modifier = Modifier
+                                            .width(100.dp)
+                                            .height(150.dp)
+                                            .background(
+                                                color = MaterialTheme.colorScheme.surface,
+                                                shape = RoundedCornerShape(15.dp)
+                                            ),
                                         contentAlignment = Alignment.Center
                                     ) {
                                         CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
@@ -428,7 +442,7 @@ fun MovieScreen(
             }
 
             // Seasons pagination
-            if(movie.isSeries == true){
+            if (movie.isSeries == true) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -456,13 +470,14 @@ fun MovieScreen(
                                     Column(
 
                                     ) {
-                                        Box(modifier = Modifier
-                                            .width(100.dp)
-                                            .height(150.dp)
-                                            .background(
-                                                color = MaterialTheme.colorScheme.surface,
-                                                shape = RoundedCornerShape(15.dp)
-                                            ),
+                                        Box(
+                                            modifier = Modifier
+                                                .width(100.dp)
+                                                .height(150.dp)
+                                                .background(
+                                                    color = MaterialTheme.colorScheme.surface,
+                                                    shape = RoundedCornerShape(15.dp)
+                                                ),
                                             contentAlignment = Alignment.Center
                                         ) {
 
@@ -481,13 +496,14 @@ fun MovieScreen(
                                     Column(
                                         modifier = Modifier.padding(start = 20.dp)
                                     ) {
-                                        Box(modifier = Modifier
-                                            .width(100.dp)
-                                            .height(150.dp)
-                                            .background(
-                                                color = MaterialTheme.colorScheme.surface,
-                                                shape = RoundedCornerShape(15.dp)
-                                            ),
+                                        Box(
+                                            modifier = Modifier
+                                                .width(100.dp)
+                                                .height(150.dp)
+                                                .background(
+                                                    color = MaterialTheme.colorScheme.surface,
+                                                    shape = RoundedCornerShape(15.dp)
+                                                ),
                                             contentAlignment = Alignment.Center
                                         ) {
                                             CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
@@ -511,13 +527,14 @@ fun MovieScreen(
                                     Column(
 
                                     ) {
-                                        Box(modifier = Modifier
-                                            .width(100.dp)
-                                            .height(150.dp)
-                                            .background(
-                                                color = MaterialTheme.colorScheme.surface,
-                                                shape = RoundedCornerShape(15.dp)
-                                            ),
+                                        Box(
+                                            modifier = Modifier
+                                                .width(100.dp)
+                                                .height(150.dp)
+                                                .background(
+                                                    color = MaterialTheme.colorScheme.surface,
+                                                    shape = RoundedCornerShape(15.dp)
+                                                ),
                                             contentAlignment = Alignment.Center
                                         ) {
 
@@ -536,13 +553,14 @@ fun MovieScreen(
                                     Column(
                                         modifier = Modifier.padding(start = 20.dp)
                                     ) {
-                                        Box(modifier = Modifier
-                                            .width(100.dp)
-                                            .height(150.dp)
-                                            .background(
-                                                color = MaterialTheme.colorScheme.surface,
-                                                shape = RoundedCornerShape(15.dp)
-                                            ),
+                                        Box(
+                                            modifier = Modifier
+                                                .width(100.dp)
+                                                .height(150.dp)
+                                                .background(
+                                                    color = MaterialTheme.colorScheme.surface,
+                                                    shape = RoundedCornerShape(15.dp)
+                                                ),
                                             contentAlignment = Alignment.Center
                                         ) {
                                             CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
@@ -612,7 +630,8 @@ fun MovieScreen(
                                 )
 
                                 Text(
-                                    text = seasons[index]?.name ?: stringResource(id = R.string.no_info_short),
+                                    text = seasons[index]?.name
+                                        ?: stringResource(id = R.string.no_info_short),
                                     style = MaterialTheme.typography.bodyMedium,
                                     color = MaterialTheme.colorScheme.onSurface,
                                     textAlign = TextAlign.Center,

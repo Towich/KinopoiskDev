@@ -11,8 +11,10 @@ import com.towich.kinopoiskDev.domain.GetFiltersUseCase
 import com.towich.kinopoiskDev.domain.GetGenresUseCase
 import com.towich.kinopoiskDev.domain.GetMoviesPageUseCase
 import com.towich.kinopoiskDev.domain.GetMoviesUseCase
+import com.towich.kinopoiskDev.domain.GetPostersUseCase
 import com.towich.kinopoiskDev.domain.GetReviewsPageUseCase
 import com.towich.kinopoiskDev.domain.GetSeasonsPageUseCase
+import com.towich.kinopoiskDev.domain.SearchMoviesPageUseCase
 import com.towich.kinopoiskDev.domain.SetCurrentMovieUseCase
 import com.towich.kinopoiskDev.domain.SetCurrentSeasonUseCase
 import com.towich.kinopoiskDev.domain.SetFiltersUseCase
@@ -38,6 +40,8 @@ class ViewModelFactory(
     private val getCurrentSeason: GetCurrentSeasonUseCase,
     private val getEpisodesPage: GetEpisodesPageUseCase,
     private val getReviewsPage: GetReviewsPageUseCase,
+    private val searchMoviesPage: SearchMoviesPageUseCase,
+    private val getPosters: GetPostersUseCase,
 ): ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return when {
@@ -53,7 +57,8 @@ class ViewModelFactory(
                     getCurrentMovie = getCurrentMovie,
                     getActorsPage = getActorsPage,
                     getSeasonsPage = getSeasonsPage,
-                    setCurrentSeason = setCurrentSeason
+                    setCurrentSeason = setCurrentSeason,
+                    getPosters = getPosters
                 ) as T
             }
 
@@ -61,7 +66,8 @@ class ViewModelFactory(
                 AllMoviesViewModel(
                     getMovies = getMovies,
                     getMoviesPage = getMoviesPage,
-                    setCurrentMovie = setCurrentMovie
+                    setCurrentMovie = setCurrentMovie,
+                    searchMoviesPage = searchMoviesPage
                 ) as T
             }
 

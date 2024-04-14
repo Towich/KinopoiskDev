@@ -5,6 +5,7 @@ import com.towich.kinopoiskDev.data.network.serializable.ActorModelResponseRemot
 import com.towich.kinopoiskDev.data.network.serializable.EpisodeModelResponseList
 import com.towich.kinopoiskDev.data.network.serializable.EpisodeModelResponseRemote
 import com.towich.kinopoiskDev.data.network.serializable.MovieModelResponseRemote
+import com.towich.kinopoiskDev.data.network.serializable.PosterModelResponseRemote
 import com.towich.kinopoiskDev.data.network.serializable.ReviewModelResponseRemote
 import com.towich.kinopoiskDev.data.network.serializable.SeasonModelResponseRemote
 import com.towich.kinopoiskDev.data.source.Constants
@@ -102,6 +103,28 @@ class MockApiService : ApiService {
     ): Response<ReviewModelResponseRemote> {
         return Response.success(
             ReviewModelResponseRemote(docs = Constants.reviewsTest)
+        )
+    }
+
+    override suspend fun searchMovie(
+        page: Int,
+        limit: Int,
+        query: String
+    ): Response<MovieModelResponseRemote> {
+        return Response.success(
+            MovieModelResponseRemote(
+                listOf(Constants.movieRemoteTest)
+            )
+        )
+    }
+
+    override suspend fun getImages(
+        page: Int,
+        limit: Int,
+        movieId: List<String>
+    ): Response<PosterModelResponseRemote> {
+        return Response.success(
+            PosterModelResponseRemote(docs = Constants.postersTest)
         )
     }
 }

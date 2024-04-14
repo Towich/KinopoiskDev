@@ -7,7 +7,7 @@ class SessionStorage {
     var listOfGenres: List<FieldModel>? = null
     var listOfCountries: List<FieldModel>? = null
 
-    var listOfFilters: List<String?> = List(size = 4) { null }
+    var listOfFilters: List<String?> = List(size = 5) { null }
 
     var currentMovie: MovieModel? = null
     var currentSeason: Int? = null

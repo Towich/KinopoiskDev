@@ -38,6 +38,7 @@ class MoviesPagingSource(
                         country = sessionStorage.listOfFilters[1],
                         year = sessionStorage.listOfFilters[2],
                         age = sessionStorage.listOfFilters[3],
+                        isSeries = sessionStorage.listOfFilters[4].toBoolean(),
                     )
                 }
                 else {

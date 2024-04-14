@@ -2,6 +2,7 @@ package com.towich.kinopoiskDev.ui.screen.filters
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.towich.kinopoiskDev.data.model.ChipModel
 import com.towich.kinopoiskDev.data.model.FieldModel
 import com.towich.kinopoiskDev.data.model.MovieModel
 import com.towich.kinopoiskDev.data.network.ApiResult
@@ -29,6 +30,13 @@ class FiltersViewModel(
 
     private val _countries = MutableStateFlow<List<FieldModel>>(listOf())
     val countries: StateFlow<List<FieldModel>> = _countries
+
+    private val _types = MutableStateFlow<List<FieldModel>>(
+        listOf(
+            FieldModel("фильм", ""),
+            FieldModel("сериал", "")
+    ))
+    val types: StateFlow<List<FieldModel>> = _types
 
     init {
         performGetGenres()

@@ -21,7 +21,8 @@ class MockApiService : ApiService {
         genre: String?,
         country: String?,
         year: String?,
-        age: String?
+        age: String?,
+        isSeries: Boolean?
     ): Response<MovieModelResponseRemote> {
         return Response.success(
             MovieModelResponseRemote(

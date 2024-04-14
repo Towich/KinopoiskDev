@@ -69,6 +69,7 @@ fun FiltersScreen(
 
     val genres by viewModel.genres.collectAsState()
     val countries by viewModel.countries.collectAsState()
+    val types by viewModel.types.collectAsState()
 
     var chosenGenre by remember {
         mutableStateOf(
@@ -104,6 +105,15 @@ fun FiltersScreen(
             }
             else
                 0f..18f
+        )
+    }
+
+    var chosenIsSeries by remember {
+        mutableStateOf(
+            if (listOfChosenFilters[4] != null)
+                listOfChosenFilters[4]!!
+            else
+                "All"
         )
     }
 
@@ -192,6 +202,20 @@ fun FiltersScreen(
                     isLoading = uiState is ScreenUiState.Loading,
                     onChipClick = { chip ->
                         chosenCountry = chip.name
+                    }
+                )
+
+                // isSeries
+                FilterComponent(
+                    title = stringResource(id = R.string.filters_screen_type),
+                    listOfChips = types.map { it.convertToChipModel() },
+                    modifier = Modifier
+                        .padding(top = 20.dp),
+                    chosenChip = ChipModel(chosenIsSeries),
+                    isFiltersShowsOnStart = true,
+                    isLoading = false,
+                    onChipClick = { chip ->
+                        chosenIsSeries = chip.name
                     }
                 )
 
@@ -284,7 +308,8 @@ fun FiltersScreen(
                         chosenGenre,
                         chosenCountry,
                         chosenYear,
-                        "${chosenAge.start.roundToInt()}-${chosenAge.endInclusive.roundToInt()}"
+                        "${chosenAge.start.roundToInt()}-${chosenAge.endInclusive.roundToInt()}",
+                        if(chosenIsSeries == "сериал") "true" else "false"
                     ).map { if (it == "All" || it == "") null else it }
 
                     viewModel.applyFilters(listOfFilters)

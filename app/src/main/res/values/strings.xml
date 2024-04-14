@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">KinopoiskDev</string>
+    <string name="app_name">MobileCinema</string>
     <string name="main_screen_popular">Popular</string>
     <string name="all_movies_screen_title">All movies</string>
     <string name="main_screen_title">Kinopoisk</string>
@@ -31,4 +31,5 @@
     <string name="author">Author</string>
     <string name="no_internet_connection">No internet connection!</string>
     <string name="search">Search</string>
+    <string name="filters_screen_type">Type</string>
 </resources>

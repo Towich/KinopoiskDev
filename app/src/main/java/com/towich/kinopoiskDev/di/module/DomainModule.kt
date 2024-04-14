@@ -2,6 +2,7 @@ package com.towich.kinopoiskDev.di.module
 
 import com.towich.kinopoiskDev.data.repository.MainRepository
 import com.towich.kinopoiskDev.di.scope.AppScope
+import com.towich.kinopoiskDev.domain.DeleteFirstQueryUseCase
 import com.towich.kinopoiskDev.domain.GetActorsPageUseCase
 import com.towich.kinopoiskDev.domain.GetCountriesUseCase
 import com.towich.kinopoiskDev.domain.GetCurrentMovieUseCase
@@ -12,12 +13,16 @@ import com.towich.kinopoiskDev.domain.GetGenresUseCase
 import com.towich.kinopoiskDev.domain.GetMoviesPageUseCase
 import com.towich.kinopoiskDev.domain.GetMoviesUseCase
 import com.towich.kinopoiskDev.domain.GetPostersUseCase
+import com.towich.kinopoiskDev.domain.GetQueriesCountUseCase
+import com.towich.kinopoiskDev.domain.GetQueriesUseCase
 import com.towich.kinopoiskDev.domain.GetReviewsPageUseCase
 import com.towich.kinopoiskDev.domain.GetSeasonsPageUseCase
 import com.towich.kinopoiskDev.domain.SearchMoviesPageUseCase
 import com.towich.kinopoiskDev.domain.SetCurrentMovieUseCase
 import com.towich.kinopoiskDev.domain.SetCurrentSeasonUseCase
 import com.towich.kinopoiskDev.domain.SetFiltersUseCase
+import com.towich.kinopoiskDev.domain.SetQueryUseCase
+import com.towich.kinopoiskDev.domain.ShiftIdsUseCase
 import dagger.Module
 import dagger.Provides
 
@@ -103,5 +108,34 @@ object DomainModule {
     @AppScope
     fun provideGetPostersUseCase(repository: MainRepository): GetPostersUseCase {
         return GetPostersUseCase(repository = repository)
+    }
+
+    @Provides
+    @AppScope
+    fun provideDeleteFirstQueryUseCase(repository: MainRepository): DeleteFirstQueryUseCase {
+        return DeleteFirstQueryUseCase(repository = repository)
+    }
+
+    @Provides
+    @AppScope
+    fun provideGetQueriesCountUseCase(repository: MainRepository): GetQueriesCountUseCase {
+        return GetQueriesCountUseCase(repository = repository)
+    }
+
+    @Provides
+    @AppScope
+    fun provideGetQueriesUseCase(repository: MainRepository): GetQueriesUseCase {
+        return GetQueriesUseCase(repository = repository)
+    }
+
+    @Provides
+    @AppScope
+    fun provideSetQueryUseCase(repository: MainRepository): SetQueryUseCase {
+        return SetQueryUseCase(repository = repository)
+    }
+    @Provides
+    @AppScope
+    fun provideShiftIdsUseCase(repository: MainRepository): ShiftIdsUseCase {
+        return ShiftIdsUseCase(repository = repository)
     }
 }

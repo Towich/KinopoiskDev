@@ -10,6 +10,8 @@ import com.towich.kinopoiskDev.data.model.SeasonModel
 import com.towich.kinopoiskDev.data.network.serializable.MovieModelResponseRemote
 import com.towich.kinopoiskDev.data.network.ApiResult
 import com.towich.kinopoiskDev.data.network.serializable.PosterModelResponseRemote
+import com.towich.kinopoiskDev.data.room.entity.MovieEntity
+import com.towich.kinopoiskDev.data.room.entity.QueryEntity
 import kotlinx.coroutines.flow.Flow
 
 interface MainRepository {
@@ -38,4 +40,16 @@ interface MainRepository {
     fun searchMovieByName(query: String): Flow<PagingData<MovieModel>>
 
     suspend fun getPosters(): ApiResult<PosterModelResponseRemote>
+
+    // Room
+    suspend fun getMoviesFromDb(): List<MovieEntity>
+    suspend fun getMovieByIdFromDb(id: Int): MovieEntity?
+    suspend fun searchMoviesByNameInDb(name: String): List<MovieEntity>
+    suspend fun insertMovieIntoDb(movie: MovieEntity)
+    suspend fun deleteDb(movie: MovieEntity)
+    suspend fun getAllQueries(): List<QueryEntity>
+    suspend fun insertQuery(query: QueryEntity)
+    suspend fun deleteFirstQuery()
+    suspend fun getQueriesCount(): Int
+    suspend fun shiftIds()
 }

@@ -6,6 +6,8 @@ plugins {
     id("org.jetbrains.kotlin.plugin.serialization")
     id("kotlinx-serialization")
     id("kotlin-kapt")
+    id("kotlin-parcelize")
+    id("com.google.devtools.ksp") version "1.9.20-1.0.13"
 }
 
 android {
@@ -102,4 +104,14 @@ dependencies {
 
     // Coil
     implementation("io.coil-kt:coil-compose:2.5.0")
+
+    // Room
+    implementation("androidx.room:room-runtime:2.6.1")
+    implementation("androidx.room:room-ktx:2.6.1")
+    implementation("androidx.room:room-common:2.6.1")
+    implementation("com.google.code.gson:gson:2.10.1")
+    implementation(kotlin("stdlib-jdk8"))
+    ksp("androidx.room:room-compiler:2.6.1")
+    ksp("androidx.lifecycle:lifecycle-common:2.7.0")
+    annotationProcessor("androidx.room:room-compiler:2.6.1")
 }

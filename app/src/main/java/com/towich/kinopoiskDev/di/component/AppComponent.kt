@@ -2,6 +2,7 @@ package com.towich.kinopoiskDev.di.component
 
 import android.content.Context
 import com.towich.kinopoiskDev.di.module.AppModule
+import com.towich.kinopoiskDev.di.module.DatabaseModule
 import com.towich.kinopoiskDev.di.module.DomainModule
 import com.towich.kinopoiskDev.di.module.NetworkModule
 import com.towich.kinopoiskDev.di.scope.AppScope
@@ -10,7 +11,7 @@ import dagger.Component
 
 
 @AppScope
-@Component(modules = [AppModule::class, NetworkModule::class, DomainModule::class])
+@Component(modules = [AppModule::class, NetworkModule::class, DomainModule::class, DatabaseModule::class])
 interface AppComponent {
     @Component.Factory
     interface Factory {

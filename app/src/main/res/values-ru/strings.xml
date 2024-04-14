@@ -30,4 +30,6 @@
     <string name="minutes">мин.</string>
     <string name="Reviews">Отзывы</string>
     <string name="author">Автор</string>
+    <string name="no_internet_connection">Нет интернета!</string>
+    <string name="search">Поиск</string>
 </resources>

@@ -5,10 +5,16 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.towich.kinopoiskDev.data.model.MovieModel
+import com.towich.kinopoiskDev.data.room.entity.QueryEntity
+import com.towich.kinopoiskDev.domain.DeleteFirstQueryUseCase
 import com.towich.kinopoiskDev.domain.GetMoviesPageUseCase
 import com.towich.kinopoiskDev.domain.GetMoviesUseCase
+import com.towich.kinopoiskDev.domain.GetQueriesCountUseCase
+import com.towich.kinopoiskDev.domain.GetQueriesUseCase
 import com.towich.kinopoiskDev.domain.SearchMoviesPageUseCase
 import com.towich.kinopoiskDev.domain.SetCurrentMovieUseCase
+import com.towich.kinopoiskDev.domain.SetQueryUseCase
+import com.towich.kinopoiskDev.domain.ShiftIdsUseCase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -19,6 +25,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -27,7 +34,14 @@ class AllMoviesViewModel @Inject constructor(
     private val getMoviesPage: GetMoviesPageUseCase,
     private val setCurrentMovie: SetCurrentMovieUseCase,
     private val searchMoviesPage: SearchMoviesPageUseCase,
+    private val getQueries: GetQueriesUseCase,
+    private val setQuery: SetQueryUseCase,
+    private val deleteFirstQuery: DeleteFirstQueryUseCase,
+    private val getQueriesCount: GetQueriesCountUseCase,
+    private val shiftIds: ShiftIdsUseCase
 ) : ViewModel() {
+
+    init { loadQueries() }
 
     private val _search = MutableStateFlow("")
 
@@ -64,6 +78,47 @@ class AllMoviesViewModel @Inject constructor(
 
     fun toggleIsSearchShowing() {
         _isSearchShowing.value = !_isSearchShowing.value
+    }
+
+    private val _queries = MutableStateFlow<List<QueryEntity>>(emptyList())
+
+    val queries = _queries.asStateFlow()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(),
+            initialValue = emptyList()
+        )
+
+    fun loadQueries() {
+        viewModelScope.launch {
+            val queriesList = getQueries()
+            _queries.value = queriesList
+        }
+    }
+
+    fun insertQuery(query: QueryEntity) {
+        viewModelScope.launch {
+            if (getQueriesCount() >= 20) {
+                deleteFirstQueryDb()
+                shiftIdsDb()
+            }
+            setQuery(query)
+            loadQueries()
+        }
+    }
+
+    fun deleteFirstQueryDb() {
+        viewModelScope.launch {
+            deleteFirstQuery()
+            loadQueries()
+        }
+    }
+
+    fun shiftIdsDb() {
+        viewModelScope.launch {
+            shiftIds()
+            loadQueries()
+        }
     }
 
 }

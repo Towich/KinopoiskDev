@@ -2,6 +2,7 @@ package com.towich.kinopoiskDev.util
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.towich.kinopoiskDev.domain.DeleteFirstQueryUseCase
 import com.towich.kinopoiskDev.domain.GetActorsPageUseCase
 import com.towich.kinopoiskDev.domain.GetCountriesUseCase
 import com.towich.kinopoiskDev.domain.GetCurrentMovieUseCase
@@ -12,12 +13,16 @@ import com.towich.kinopoiskDev.domain.GetGenresUseCase
 import com.towich.kinopoiskDev.domain.GetMoviesPageUseCase
 import com.towich.kinopoiskDev.domain.GetMoviesUseCase
 import com.towich.kinopoiskDev.domain.GetPostersUseCase
+import com.towich.kinopoiskDev.domain.GetQueriesCountUseCase
+import com.towich.kinopoiskDev.domain.GetQueriesUseCase
 import com.towich.kinopoiskDev.domain.GetReviewsPageUseCase
 import com.towich.kinopoiskDev.domain.GetSeasonsPageUseCase
 import com.towich.kinopoiskDev.domain.SearchMoviesPageUseCase
 import com.towich.kinopoiskDev.domain.SetCurrentMovieUseCase
 import com.towich.kinopoiskDev.domain.SetCurrentSeasonUseCase
 import com.towich.kinopoiskDev.domain.SetFiltersUseCase
+import com.towich.kinopoiskDev.domain.SetQueryUseCase
+import com.towich.kinopoiskDev.domain.ShiftIdsUseCase
 import com.towich.kinopoiskDev.ui.screen.allmovies.AllMoviesViewModel
 import com.towich.kinopoiskDev.ui.screen.episodes.EpisodesViewModel
 import com.towich.kinopoiskDev.ui.screen.filters.FiltersViewModel
@@ -42,6 +47,11 @@ class ViewModelFactory(
     private val getReviewsPage: GetReviewsPageUseCase,
     private val searchMoviesPage: SearchMoviesPageUseCase,
     private val getPosters: GetPostersUseCase,
+    private val getQueries: GetQueriesUseCase,
+    private val setQuery: SetQueryUseCase,
+    private val deleteFirstQuery: DeleteFirstQueryUseCase,
+    private val getQueriesCount: GetQueriesCountUseCase,
+    private val shiftIds: ShiftIdsUseCase
 ): ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return when {
@@ -67,7 +77,12 @@ class ViewModelFactory(
                     getMovies = getMovies,
                     getMoviesPage = getMoviesPage,
                     setCurrentMovie = setCurrentMovie,
-                    searchMoviesPage = searchMoviesPage
+                    searchMoviesPage = searchMoviesPage,
+                    getQueries = getQueries,
+                    setQuery = setQuery,
+                    deleteFirstQuery = deleteFirstQuery,
+                    getQueriesCount = getQueriesCount,
+                    shiftIds = shiftIds
                 ) as T
             }
 

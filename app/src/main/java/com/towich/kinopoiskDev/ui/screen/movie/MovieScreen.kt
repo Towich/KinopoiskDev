@@ -667,7 +667,6 @@ fun MovieScreen(
                     fontWeight = FontWeight.Bold
                 )
             }
-//            Spacer(modifier = Modifier.height(500.dp))
         }
     }
 }

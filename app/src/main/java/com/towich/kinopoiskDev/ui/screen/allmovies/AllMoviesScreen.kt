@@ -1,5 +1,6 @@
 package com.towich.kinopoiskDev.ui.screen.allmovies
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -13,25 +14,25 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
-import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DockedSearchBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -47,13 +48,13 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.SubcomposeAsyncImage
 import com.towich.kinopoiskDev.R
+import com.towich.kinopoiskDev.data.room.entity.QueryEntity
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -64,59 +65,104 @@ fun AllMoviesScreen(
     onNavIconClicked: () -> Unit
 ) {
     val movies = viewModel.getMovies().collectAsLazyPagingItems()
-    val searchedMovies = viewModel.searchedMovies.collectAsLazyPagingItems()
     val searchQuery by viewModel.search.collectAsState()
+    val searchedMovies = viewModel.searchedMovies.collectAsLazyPagingItems()
     val showSearchBar by viewModel.isSearchShowing.collectAsState()
+    val queries by viewModel.queries.collectAsState()
 
     Scaffold(
         topBar = {
-            Box(modifier = Modifier
-                .height(64.dp)
-                .fillMaxWidth()
-            ){
-                if(showSearchBar){
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+            ) {
+                if (showSearchBar) {
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(top = 5.dp, start = 20.dp, end = 5.dp),
+                            .padding(top = 10.dp, bottom = 10.dp, start = 20.dp),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        OutlinedTextField(
-                            value = searchQuery,
-                            onValueChange = { newSearchQuery ->
+
+                        var active by remember { mutableStateOf(false) }
+
+                        DockedSearchBar(
+                            query = searchQuery,
+                            onQueryChange = { newSearchQuery ->
                                 viewModel.setSearch(query = newSearchQuery)
                             },
-                            shape = CircleShape,
-                            textStyle = MaterialTheme.typography.bodySmall,
-                            colors = TextFieldDefaults.colors(
-                                unfocusedContainerColor = MaterialTheme.colorScheme.surface,
-                                focusedContainerColor = MaterialTheme.colorScheme.surface
-                            ),
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-                            singleLine = true,
-                            modifier = Modifier
-                                .fillMaxWidth(0.85f)
-                                .height(48.dp)
-                        )
-                        IconButton(
-                            onClick = {
-                                viewModel.toggleIsSearchShowing()
-                                viewModel.setSearch("")
-                            }
+                            onSearch = { newQuery ->
+                                println("Performing search on query: $newQuery")
+                                if (searchQuery.replace("\\s".toRegex(), "").isNotEmpty()) {
+                                    viewModel.insertQuery(QueryEntity(id = null, query = searchQuery))
+                                }
+                                active = false
+                            },
+                            active = active,
+                            onActiveChange = { active = it },
+                            placeholder = {
+                                Text(text = stringResource(R.string.search))
+                            },
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = Icons.Filled.Search,
+                                    contentDescription = stringResource(R.string.search)
+                                )
+                            },
+                            trailingIcon = {
+                                Row {
+                                    if (active) {
+                                        IconButton(
+                                            onClick = {
+                                                viewModel.setSearch("")
+                                                if (searchQuery.isEmpty()) {
+                                                    active = false
+                                                    viewModel.toggleIsSearchShowing()
+                                                } else {
+                                                    if (searchQuery.replace("\\s".toRegex(), "").isNotEmpty()) {
+                                                        viewModel.insertQuery(QueryEntity(id = null, query = searchQuery))
+                                                    }
+                                                }
+                                            }
+                                        ) {
+                                            Icon(
+                                                imageVector = Icons.Filled.Close,
+                                                contentDescription = "Close"
+                                            )
+                                        }
+                                    }
+                                }
+                            },
                         ) {
-                            Icon(
-                                imageVector = Icons.Default.Clear,
-                                contentDescription = "Clear",
-                                tint = MaterialTheme.colorScheme.primary,
+                            LazyColumn(
                                 modifier = Modifier
-                                    .size(28.dp)
-                            )
+                                    .fillMaxWidth()
+                                    .heightIn(max = 240.dp)
+
+                            ) {
+                                items(queries.reversed().takeLast(20)) { item ->
+                                    ListItem(
+                                        modifier = Modifier.clickable { viewModel.setSearch(item.query.toString()) },
+                                        headlineContent = { Text(text = item.query.toString()) },
+                                        leadingContent = {
+                                            Icon(
+                                                painterResource(id = R.drawable.history_icon),
+                                                contentDescription = null
+                                            )
+                                        }
+                                    )
+                                }
+                            }
+                        }
+                        BackHandler {
+                            viewModel.insertQuery(QueryEntity(id = null, query = searchQuery))
+                            viewModel.toggleIsSearchShowing()
+                            viewModel.setSearch("")
                         }
                     }
 
-                }
-                else{
+                } else {
                     CenterAlignedTopAppBar(
                         title = {
                             Text(
@@ -169,12 +215,12 @@ fun AllMoviesScreen(
             verticalItemSpacing = 20.dp,
             horizontalArrangement = Arrangement.spacedBy(20.dp)
         ) {
-            items(if(searchQuery != "") searchedMovies.itemCount else movies.itemCount) { index ->
+            items(if (searchQuery != "") searchedMovies.itemCount else movies.itemCount) { index ->
                 Column(
                     modifier = Modifier.fillMaxWidth(0.4f)
                 ) {
                     SubcomposeAsyncImage(
-                        model = (if(searchQuery != "") searchedMovies else movies)[index]?.posterPreviewUrl,
+                        model = (if (searchQuery != "") searchedMovies else movies)[index]?.posterPreviewUrl,
                         contentDescription = "Poster",
                         contentScale = ContentScale.FillWidth,
                         loading = {
@@ -222,7 +268,8 @@ fun AllMoviesScreen(
                     )
 
                     Text(
-                        text = (if(searchQuery != "") searchedMovies else movies)[index]?.name ?: stringResource(id = R.string.no_info_name),
+                        text = (if (searchQuery != "") searchedMovies else movies)[index]?.name
+                            ?: stringResource(id = R.string.no_info_name),
                         style = MaterialTheme.typography.titleMedium,
                         color = MaterialTheme.colorScheme.onSurface,
                         modifier = Modifier.padding(top = 10.dp)
@@ -237,7 +284,7 @@ fun AllMoviesScreen(
                             contentAlignment = Alignment.Center
                         ) {
                             Text(
-                                text = ((if(searchQuery != "") searchedMovies else movies).loadState.append as LoadState.Error).error.message
+                                text = ((if (searchQuery != "") searchedMovies else movies).loadState.append as LoadState.Error).error.message
                                     ?: stringResource(
                                         id = R.string.error
                                     ),
@@ -267,13 +314,12 @@ fun AllMoviesScreen(
 
                     }
 
-                    else -> {
-                    }
+                    else -> {}
                 }
             }
         }
 
-        when ((if(searchQuery != "") searchedMovies else movies).loadState.refresh) { // FIRST LOAD
+        when ((if (searchQuery != "") searchedMovies else movies).loadState.refresh) { // FIRST LOAD
 
             is LoadState.Error -> {
                 Box(
@@ -281,7 +327,7 @@ fun AllMoviesScreen(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = ((if(searchQuery != "") searchedMovies else movies).loadState.refresh as LoadState.Error).error.message
+                        text = ((if (searchQuery != "") searchedMovies else movies).loadState.refresh as LoadState.Error).error.message
                             ?: stringResource(id = R.string.error),
                         style = MaterialTheme.typography.titleLarge,
                         color = MaterialTheme.colorScheme.primary,

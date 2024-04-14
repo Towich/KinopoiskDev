@@ -1,5 +1,7 @@
 package com.towich.kinopoiskDev.data.repository
 
+import android.content.Context
+import android.net.ConnectivityManager
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
@@ -16,6 +18,12 @@ import com.towich.kinopoiskDev.data.network.ApiService
 import com.towich.kinopoiskDev.data.network.serializable.MovieModelResponseRemote
 import com.towich.kinopoiskDev.data.network.ApiResult
 import com.towich.kinopoiskDev.data.network.serializable.PosterModelResponseRemote
+import com.towich.kinopoiskDev.data.room.dao.CountryDao
+import com.towich.kinopoiskDev.data.room.dao.GenreDao
+import com.towich.kinopoiskDev.data.room.dao.MovieDao
+import com.towich.kinopoiskDev.data.room.dao.QueryDao
+import com.towich.kinopoiskDev.data.room.entity.MovieEntity
+import com.towich.kinopoiskDev.data.room.entity.QueryEntity
 import com.towich.kinopoiskDev.data.util.ActorsPagingSource
 import com.towich.kinopoiskDev.data.util.EpisodesPagingSource
 import com.towich.kinopoiskDev.data.util.ReviewsPagingSource
@@ -24,7 +32,13 @@ import kotlinx.coroutines.flow.Flow
 
 class MainRepositoryImpl(
     private val apiService: ApiService,
-    private val sessionStorage: SessionStorage
+    private val sessionStorage: SessionStorage,
+    private val movieDao: MovieDao,
+    private val genreDao: GenreDao,
+    private val countryDao: CountryDao,
+    private val queryDao: QueryDao,
+    private val connectivityManager: ConnectivityManager,
+    private val context: Context
 ) : MainRepository {
 
     override suspend fun getMovies(): ApiResult<MovieModelResponseRemote> {
@@ -47,7 +61,7 @@ class MainRepositoryImpl(
             pageSize = Constants.pageLimit,
         ),
         pagingSourceFactory = {
-            MoviesPagingSource(apiService, sessionStorage)
+            MoviesPagingSource(apiService, sessionStorage, null, movieDao, connectivityManager, context)
         }
     ).flow
 
@@ -156,7 +170,10 @@ class MainRepositoryImpl(
             MoviesPagingSource(
                 apiService = apiService,
                 sessionStorage = sessionStorage,
-                query = query
+                query = query,
+                movieDao = movieDao,
+                connectivityManager = connectivityManager,
+                context = context
             )
         }
     ).flow
@@ -175,5 +192,45 @@ class MainRepositoryImpl(
         } catch (e: Exception){
             ApiResult.Error(e.message ?: "unknown error")
         }
+    }
+
+    override suspend fun getMoviesFromDb(): List<MovieEntity> {
+        return movieDao.getAllMovies(Constants.pageLimit, Constants.pageLimit)
+    }
+
+    override suspend fun getMovieByIdFromDb(id: Int): MovieEntity? {
+        return movieDao.getMovieById(id)
+    }
+
+    override suspend fun searchMoviesByNameInDb(name: String): List<MovieEntity> {
+        return movieDao.searchMoviesByName(name)
+    }
+
+    override suspend fun insertMovieIntoDb(movie: MovieEntity) {
+        movieDao.insertMovie(movie)
+    }
+
+    override suspend fun deleteDb(movie: MovieEntity) {
+        movieDao.deleteAllMovies()
+    }
+
+    override suspend fun getAllQueries(): List<QueryEntity> {
+        return queryDao.getAllQueries()
+    }
+
+    override suspend fun insertQuery(query: QueryEntity) {
+        queryDao.insertQuery(query)
+    }
+
+    override suspend fun deleteFirstQuery() {
+        queryDao.deleteFirstQuery()
+    }
+
+    override suspend fun getQueriesCount(): Int {
+        return queryDao.getQueriesCount()
+    }
+
+    override suspend fun shiftIds() {
+        queryDao.shiftIds()
     }
 }
